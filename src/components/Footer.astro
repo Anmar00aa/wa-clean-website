@@ -1,0 +1,74 @@
+---
+import { site, footerNav, regions, locations } from "../config/site";
+import Icon from "./Icon.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-brand-950 text-brand-50 pb-24 lg:pb-0">
+  <div class="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:py-16">
+    <div>
+      <div class="inline-flex rounded-xl bg-white p-2">
+        <img src="/logo.png" alt={site.name} class="h-16 w-16" width="64" height="64" />
+      </div>
+      <p class="mt-4 text-sm leading-relaxed text-brand-100/80">
+        Professionelle Gebäudereinigung für Unternehmen und Privatkunden in Wiesbaden, {regions[0]} und Umgebung.
+      </p>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-white/90">Unternehmen</h3>
+      <ul class="mt-4 space-y-2.5 text-sm text-brand-100/80">
+        {footerNav.unternehmen.map((item) => (
+          <li><a href={item.href} class="hover:text-white">{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-white/90">Leistungen</h3>
+      <ul class="mt-4 space-y-2.5 text-sm text-brand-100/80">
+        {footerNav.leistungen.map((item) => (
+          <li><a href={item.href} class="hover:text-white">{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-white/90">Kontakt</h3>
+      <ul class="mt-4 space-y-4 text-sm text-brand-100/80">
+        {locations.map((loc) => (
+          <li>
+            <div class="flex items-start gap-2">
+              <Icon name="map-pin" class="mt-0.5 h-4 w-4 shrink-0" />
+              <span>{loc.label}: {loc.street}, {loc.zip} {loc.city}</span>
+            </div>
+            <div class="mt-1.5 flex items-center gap-2">
+              <Icon name="phone" class="h-4 w-4 shrink-0" />
+              <span>Tel.: <a href={loc.phoneHref} class="hover:text-white">{loc.phoneDisplay}</a></span>
+            </div>
+            <div class="mt-1 flex items-center gap-2">
+              <Icon name="phone" class="h-4 w-4 shrink-0" />
+              <span>Mobil: <a href={loc.mobileHref} class="hover:text-white">{loc.mobileDisplay}</a></span>
+            </div>
+          </li>
+        ))}
+        <li class="flex items-center gap-2">
+          <Icon name="mail" class="h-4 w-4 shrink-0" />
+          <span>E-Mail: <a href={`mailto:${site.email}`} class="hover:text-white">{site.email}</a></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-page flex flex-col gap-3 py-6 text-xs text-brand-100/70 sm:flex-row sm:items-center sm:justify-between">
+      <p>&copy; {year} {site.name}. Alle Rechte vorbehalten.</p>
+      <div class="flex gap-5">
+        {footerNav.rechtliches.map((item) => (
+          <a href={item.href} class="hover:text-white">{item.label}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+</footer>

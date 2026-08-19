@@ -1,0 +1,132 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import ApplicationForm from "../components/ApplicationForm.astro";
+import Icon from "../components/Icon.astro";
+
+const bereiche = [
+  { title: "Reinigungskraft (m/w/d)", icon: "shield" as const },
+  { title: "Unterhaltsreinigung", icon: "sparkle" as const },
+  { title: "Büroreinigung", icon: "office" as const },
+  { title: "Fenster- und Glasreinigung", icon: "window" as const },
+  { title: "Grundreinigung", icon: "deep-clean" as const },
+  { title: "Hotelreinigung", icon: "hotel" as const },
+  { title: "Hausmeisterservice", icon: "toolbox" as const },
+  { title: "Gartenpflege", icon: "leaf" as const },
+  { title: "Winterdienst", icon: "snowflake" as const },
+];
+
+const mitbringen = [
+  "Zuverlässigkeit",
+  "Sorgfältige Arbeitsweise",
+  "Pünktlichkeit",
+  "Freundliches Auftreten",
+  "Teamfähigkeit",
+  "Verantwortungsbewusstsein",
+  "Führerschein Klasse B von Vorteil",
+  "Erfahrung in der Reinigung von Vorteil, aber nicht zwingend erforderlich",
+];
+
+const wirBieten = [
+  "Abwechslungsreiche Einsatzorte",
+  "Strukturierte Einarbeitung",
+  "Freundliches Team",
+  "Langfristige Zusammenarbeit möglich",
+  "Flexible Einsatzmöglichkeiten je nach Auftrag",
+  "Moderne Arbeitsmittel",
+];
+---
+
+<Layout
+  title="Karriere"
+  description="Werde Teil des WA-Clean Teams in Wiesbaden und im Rheingau. Wir freuen uns auf deine Bewerbung als Reinigungskraft – Initiativbewerbungen sind jederzeit willkommen."
+>
+  <Breadcrumbs items={[{ label: "Startseite", href: "/" }, { label: "Karriere", href: "/karriere/" }]} />
+
+  <!-- Hero -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Karriere</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Werde Teil unseres Teams</h1>
+        <p class="mt-4 text-lg text-brand-700">
+          Du suchst einen zuverlässigen Job in der Gebäudereinigung? Dann freuen wir uns auf deine Bewerbung.
+        </p>
+        <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <a href="#bewerbungsformular" class="btn-primary">Jetzt bewerben</a>
+          <a href="#offene-bereiche" class="btn-secondary">Offene Stellen ansehen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tätigkeitsbereiche -->
+  <section id="offene-bereiche" class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Bereiche</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Wo du bei uns einsteigen kannst</h2>
+        <p class="mt-4 text-brand-700">
+          Initiativbewerbungen sind jederzeit willkommen – gib einfach an, welcher Bereich am besten zu dir
+          passt.
+        </p>
+      </div>
+      <div class="reveal-group mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {bereiche.map((b) => (
+          <div class="reveal-item card flex items-center gap-4 p-5">
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-950">
+              <Icon name={b.icon} class="h-5 w-5" />
+            </span>
+            <p class="font-medium text-brand-950">{b.title}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Mitbringen / Wir bieten -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page grid gap-10 lg:grid-cols-2">
+      <div class="reveal">
+        <p class="eyebrow">Dein Profil</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Das solltest du mitbringen</h2>
+        <ul class="mt-6 space-y-3">
+          {mitbringen.map((punkt) => (
+            <li class="flex items-start gap-2.5 text-sm text-brand-700">
+              <Icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-accent-600" />
+              {punkt}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">Unser Angebot</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Das bieten wir</h2>
+        <ul class="mt-6 space-y-3">
+          {wirBieten.map((punkt) => (
+            <li class="flex items-start gap-2.5 text-sm text-brand-700">
+              <Icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-accent-600" />
+              {punkt}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bewerbungsformular -->
+  <section id="bewerbungsformular" class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Bewerbung</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Jetzt bewerben</h2>
+        <p class="mt-4 text-brand-700">
+          Fülle das Formular aus – wir melden uns bei Interesse schnellstmöglich bei dir.
+        </p>
+      </div>
+      <div class="reveal mx-auto mt-10 max-w-3xl">
+        <ApplicationForm taetigkeitsbereiche={bereiche.map((b) => b.title)} />
+      </div>
+    </div>
+  </section>
+</Layout>

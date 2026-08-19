@@ -1,0 +1,291 @@
+---
+// HINWEIS zum Versand: Wie bei ContactForm.astro und ReviewFlow.astro ist
+// dieses Formular noch nicht an ein Backend angebunden (action="#"). Für
+// eine statische Astro-Seite eignet sich z. B. Netlify Forms, Formspree
+// oder eine eigene API-Route – dort sollte auch die serverseitige Prüfung
+// des Honeypot-Felds sowie Dateityp/-größe des Lebenslaufs erfolgen.
+interface Props {
+  taetigkeitsbereiche: string[];
+}
+
+const { taetigkeitsbereiche } = Astro.props;
+
+const regionen = ["Wiesbaden", "Rheingau", "Mainz", "Umgebung"];
+const wochentage = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+const tageszeiten = ["Vormittags", "Nachmittags", "Abends", "Flexibel"];
+---
+
+<form class="card grid gap-5 p-6 sm:p-8" action="#" method="POST" data-application-form novalidate>
+  <!-- Honeypot: für Menschen unsichtbar, Bots füllen es oft blind aus -->
+  <div class="hidden" aria-hidden="true">
+    <label for="bewerbung-website">Bitte freilassen</label>
+    <input type="text" id="bewerbung-website" name="website" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="bewerbung-vorname" class="mb-1.5 block text-sm font-medium text-brand-900">Vorname *</label>
+      <input
+        type="text"
+        id="bewerbung-vorname"
+        name="vorname"
+        required
+        autocomplete="given-name"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+      />
+    </div>
+    <div>
+      <label for="bewerbung-nachname" class="mb-1.5 block text-sm font-medium text-brand-900">Nachname *</label>
+      <input
+        type="text"
+        id="bewerbung-nachname"
+        name="nachname"
+        required
+        autocomplete="family-name"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+      />
+    </div>
+
+    <div>
+      <label for="bewerbung-telefon" class="mb-1.5 block text-sm font-medium text-brand-900">Telefonnummer *</label>
+      <input
+        type="tel"
+        id="bewerbung-telefon"
+        name="telefon"
+        required
+        autocomplete="tel"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+      />
+    </div>
+    <div>
+      <label for="bewerbung-email" class="mb-1.5 block text-sm font-medium text-brand-900">E-Mail *</label>
+      <input
+        type="email"
+        id="bewerbung-email"
+        name="email"
+        required
+        autocomplete="email"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+      />
+    </div>
+
+    <div>
+      <label for="bewerbung-wohnort" class="mb-1.5 block text-sm font-medium text-brand-900">Wohnort *</label>
+      <input
+        type="text"
+        id="bewerbung-wohnort"
+        name="wohnort"
+        required
+        autocomplete="address-level2"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+      />
+    </div>
+    <div>
+      <label for="bewerbung-bereich" class="mb-1.5 block text-sm font-medium text-brand-900">Gewünschter Tätigkeitsbereich *</label>
+      <select
+        id="bewerbung-bereich"
+        name="taetigkeitsbereich"
+        required
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600"
+      >
+        <option value="">Bitte wählen</option>
+        {taetigkeitsbereiche.map((t) => <option value={t}>{t}</option>)}
+      </select>
+    </div>
+
+    <div>
+      <label for="bewerbung-einsatzgebiet" class="mb-1.5 block text-sm font-medium text-brand-900">Bevorzugtes Einsatzgebiet</label>
+      <select
+        id="bewerbung-einsatzgebiet"
+        name="einsatzgebiet"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600"
+      >
+        <option value="">Bitte wählen (optional)</option>
+        {regionen.map((r) => <option value={r}>{r}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="bewerbung-lebenslauf" class="mb-1.5 block text-sm font-medium text-brand-900">Lebenslauf (optional)</label>
+      <input
+        type="file"
+        id="bewerbung-lebenslauf"
+        name="lebenslauf"
+        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        class="w-full rounded-md border-0 bg-brand-50 px-3 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 file:mr-3 file:rounded-full file:border-0 file:bg-accent-100 file:px-3.5 file:py-1.5 file:text-xs file:font-medium file:text-accent-700 focus:ring-2 focus:ring-accent-600"
+      />
+      <p class="mt-1.5 text-xs text-brand-600" data-lebenslauf-hint>PDF, DOC oder DOCX, max. 8 MB.</p>
+    </div>
+  </div>
+
+  <fieldset>
+    <legend class="mb-2 text-sm font-medium text-brand-900">Gewünschte Beschäftigungsart *</legend>
+    <div class="flex flex-wrap gap-x-6 gap-y-2">
+      {["Minijob", "Teilzeit", "Vollzeit", "Flexibel"].map((option, i) => (
+        <label class="flex items-center gap-2 text-sm text-brand-900">
+          <input type="radio" name="beschaeftigungsart" value={option} required={i === 0} class="h-4 w-4 border-brand-950/20 text-accent-600 focus:ring-accent-600" />
+          {option}
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="mb-2 text-sm font-medium text-brand-900">Mögliche Arbeitstage</legend>
+    <div class="flex flex-wrap gap-x-5 gap-y-2">
+      {wochentage.map((tag) => (
+        <label class="flex items-center gap-1.5 text-sm text-brand-900">
+          <input type="checkbox" name="arbeitstage" value={tag} class="h-4 w-4 rounded border-brand-950/20 text-accent-600 focus:ring-accent-600" />
+          {tag}
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="mb-2 text-sm font-medium text-brand-900">Mögliche Arbeitszeiten</legend>
+    <div class="flex flex-wrap gap-x-5 gap-y-2">
+      {tageszeiten.map((zeit) => (
+        <label class="flex items-center gap-1.5 text-sm text-brand-900">
+          <input type="checkbox" name="arbeitszeiten" value={zeit} class="h-4 w-4 rounded border-brand-950/20 text-accent-600 focus:ring-accent-600" />
+          {zeit}
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <div class="grid gap-5 sm:grid-cols-3">
+    <fieldset>
+      <legend class="mb-2 text-sm font-medium text-brand-900">Führerschein Klasse B *</legend>
+      <div class="flex gap-5">
+        {["Ja", "Nein"].map((option, i) => (
+          <label class="flex items-center gap-2 text-sm text-brand-900">
+            <input type="radio" name="fuehrerschein" value={option} required={i === 0} class="h-4 w-4 border-brand-950/20 text-accent-600 focus:ring-accent-600" />
+            {option}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="mb-2 text-sm font-medium text-brand-900">Eigenes Fahrzeug *</legend>
+      <div class="flex gap-5">
+        {["Ja", "Nein"].map((option, i) => (
+          <label class="flex items-center gap-2 text-sm text-brand-900">
+            <input type="radio" name="fahrzeug" value={option} required={i === 0} class="h-4 w-4 border-brand-950/20 text-accent-600 focus:ring-accent-600" />
+            {option}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="mb-2 text-sm font-medium text-brand-900">Berufserfahrung Reinigung *</legend>
+      <div class="flex gap-5">
+        {["Ja", "Nein"].map((option, i) => (
+          <label class="flex items-center gap-2 text-sm text-brand-900">
+            <input type="radio" name="berufserfahrung" value={option} required={i === 0} class="h-4 w-4 border-brand-950/20 text-accent-600 focus:ring-accent-600" />
+            {option}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  </div>
+
+  <div>
+    <label for="bewerbung-nachricht" class="mb-1.5 block text-sm font-medium text-brand-900">Kurze Nachricht</label>
+    <textarea
+      id="bewerbung-nachricht"
+      name="nachricht"
+      rows="4"
+      class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+      placeholder="Erzähl uns kurz etwas über dich (optional)"
+    ></textarea>
+  </div>
+
+  <label class="flex items-start gap-3 text-sm text-brand-900/80">
+    <input
+      type="checkbox"
+      name="datenschutz"
+      required
+      class="mt-1 h-4 w-4 rounded border-brand-950/20 text-accent-600 focus:ring-accent-600"
+    />
+    <span>
+      Ich habe die <a href="/datenschutz/" class="underline hover:text-accent-600">Datenschutzerklärung</a>
+      gelesen und stimme der Verarbeitung meiner Daten im Rahmen meiner Bewerbung zu. *
+    </span>
+  </label>
+
+  <button type="submit" class="btn-primary w-full sm:w-auto">Bewerbung absenden</button>
+</form>
+
+<div class="card hidden p-6 text-center sm:p-8" data-application-success>
+  <p class="text-lg font-semibold text-brand-950">
+    Vielen Dank für deine Bewerbung. Wir haben deine Angaben erhalten und melden uns bei Interesse
+    schnellstmöglich bei dir.
+  </p>
+</div>
+
+<script>
+  function setupApplicationForm(form: HTMLFormElement) {
+    const successBox = document.querySelector<HTMLElement>("[data-application-success]");
+    const fileInput = form.querySelector<HTMLInputElement>("#bewerbung-lebenslauf");
+    const fileHint = form.querySelector<HTMLElement>("[data-lebenslauf-hint]");
+    const defaultHint = fileHint?.textContent ?? "";
+
+    const MAX_BYTES = 8 * 1024 * 1024;
+    const ALLOWED_TYPES = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    const ALLOWED_EXT = [".pdf", ".doc", ".docx"];
+
+    fileInput?.addEventListener("change", () => {
+      const file = fileInput.files?.[0];
+      if (!fileHint) return;
+      if (!file) {
+        fileHint.textContent = defaultHint;
+        fileHint.classList.remove("text-red-600");
+        return;
+      }
+      const ext = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
+      const validType = ALLOWED_TYPES.includes(file.type) || ALLOWED_EXT.includes(ext);
+      if (!validType) {
+        fileHint.textContent = "Dieses Dateiformat wird nicht unterstützt. Bitte PDF, DOC oder DOCX wählen.";
+        fileHint.classList.add("text-red-600");
+        fileInput.value = "";
+        return;
+      }
+      if (file.size > MAX_BYTES) {
+        fileHint.textContent = "Die Datei ist zu groß. Maximal 8 MB sind erlaubt.";
+        fileHint.classList.add("text-red-600");
+        fileInput.value = "";
+        return;
+      }
+      fileHint.textContent = defaultHint;
+      fileHint.classList.remove("text-red-600");
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // Honeypot: gefüllt bedeutet höchstwahrscheinlich Bot -> still verwerfen
+      const honeypot = form.querySelector<HTMLInputElement>('[name="website"]');
+      if (honeypot?.value) return;
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      // HINWEIS: Hier fehlt noch die eigentliche Übertragung an ein Backend
+      // (siehe Kommentar am Kopf dieser Komponente). Bis dahin wird die
+      // Bestätigung ausschließlich clientseitig angezeigt.
+      form.classList.add("hidden");
+      successBox?.classList.remove("hidden");
+      successBox?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>("[data-application-form]").forEach(setupApplicationForm);
+</script>

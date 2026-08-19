@@ -1,0 +1,31 @@
+---
+// Zeigt ein echtes Vorher-/Nachher-Fotopaar nebeneinander.
+interface Props {
+  title: string;
+  before: string;
+  after: string;
+  class?: string;
+}
+
+const { title, before, after, class: className = "" } = Astro.props;
+---
+
+<div class:list={["reveal-item card overflow-hidden", className]}>
+  <div class="grid grid-cols-2">
+    <div class="relative aspect-square overflow-hidden">
+      <img src={before} alt={`${title} – vorher`} class="h-full w-full object-cover" loading="lazy" />
+      <span class="absolute left-2 top-2 rounded-full bg-brand-950/80 px-2.5 py-1 text-xs font-medium text-white">
+        Vorher
+      </span>
+    </div>
+    <div class="relative aspect-square overflow-hidden border-l border-white">
+      <img src={after} alt={`${title} – nachher`} class="h-full w-full object-cover" loading="lazy" />
+      <span class="absolute left-2 top-2 rounded-full bg-accent-600/90 px-2.5 py-1 text-xs font-medium text-white">
+        Nachher
+      </span>
+    </div>
+  </div>
+  <div class="p-5">
+    <h3 class="text-base font-semibold text-brand-950">{title}</h3>
+  </div>
+</div>

@@ -1,0 +1,225 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import FaqAccordion from "../components/FaqAccordion.astro";
+
+const kategorien = [
+  {
+    titel: "Allgemeine Fragen",
+    fragen: [
+      {
+        question: "Welche Reinigungsleistungen bieten Sie an?",
+        answer:
+          "Wir bieten professionelle Gebäudereinigung für private und gewerbliche Kunden. Dazu gehören unter anderem Unterhaltsreinigung, Büroreinigung, Fenster- und Glasreinigung, Grundreinigung, Bauendreinigung, Treppenhausreinigung sowie individuell vereinbarte Reinigungsleistungen.",
+      },
+      {
+        question: "In welchen Regionen sind Sie tätig?",
+        answer:
+          "Unser Einsatzgebiet umfasst Wiesbaden, den Rheingau und die umliegenden Regionen. Gerne prüfen wir individuell, ob wir auch an Ihrem Standort tätig werden können.",
+      },
+      {
+        question: "Reinigen Sie sowohl Privathaushalte als auch Gewerbeobjekte?",
+        answer:
+          "Ja. Wir betreuen sowohl Privatkunden als auch Unternehmen, Büros, Praxen, Hotels, Gastronomiebetriebe, Treppenhäuser und weitere gewerbliche Objekte.",
+      },
+      {
+        question: "Kann ich eine unverbindliche Anfrage stellen?",
+        answer:
+          "Ja. Sie können uns jederzeit unverbindlich kontaktieren. Nach Klärung des gewünschten Leistungsumfangs erhalten Sie ein transparentes Angebot.",
+      },
+    ],
+  },
+  {
+    titel: "Preise & Angebot",
+    fragen: [
+      {
+        question: "Was kostet eine professionelle Reinigung?",
+        answer:
+          "Die Kosten hängen von verschiedenen Faktoren ab, beispielsweise von der Größe des Objekts, dem Verschmutzungsgrad, der gewünschten Leistung und der Reinigungshäufigkeit. Deshalb erstellen wir individuelle Angebote.",
+      },
+      {
+        question: "Ist eine Besichtigung vor dem Angebot möglich?",
+        answer:
+          "Ja. Besonders bei größeren oder regelmäßig zu reinigenden Objekten ist eine Besichtigung sinnvoll. Dadurch können wir den tatsächlichen Aufwand besser einschätzen und ein passendes Angebot erstellen.",
+      },
+      {
+        question: "Gibt es versteckte Kosten?",
+        answer:
+          "Nein. Der vereinbarte Leistungsumfang und die entsprechenden Kosten werden transparent festgehalten.",
+      },
+    ],
+  },
+  {
+    titel: "Unterhalts- & Büroreinigung",
+    fragen: [
+      {
+        question: "Wie oft kann eine Unterhaltsreinigung durchgeführt werden?",
+        answer:
+          "Je nach Bedarf kann die Reinigung täglich, mehrmals pro Woche, wöchentlich oder in individuell vereinbarten Intervallen erfolgen.",
+      },
+      {
+        question: "Können Reinigungszeiten außerhalb unserer Geschäftszeiten vereinbart werden?",
+        answer:
+          "Ja. Bei gewerblichen Kunden stimmen wir die Einsatzzeiten individuell ab, damit der normale Betriebsablauf möglichst wenig beeinträchtigt wird.",
+      },
+      {
+        question: "Können Sie einen individuellen Reinigungsplan erstellen?",
+        answer:
+          "Ja. Gemeinsam legen wir fest, welche Bereiche gereinigt werden, welche Arbeiten erforderlich sind und in welchen Intervallen sie durchgeführt werden sollen.",
+      },
+    ],
+  },
+  {
+    titel: "Fenster- & Glasreinigung",
+    fragen: [
+      {
+        question: "Reinigen Sie Fenster inklusive Rahmen?",
+        answer:
+          "Ja. Je nach Auftrag können Glasflächen, Fensterrahmen, Fensterbänke und weitere zugängliche Bereiche gereinigt werden. Der genaue Leistungsumfang wird vorab vereinbart.",
+      },
+      {
+        question: "Reinigen Sie auch große Glasflächen?",
+        answer:
+          "Ja. Wir übernehmen auch die Reinigung größerer Glasflächen und Fensteranlagen, sofern diese sicher zugänglich sind.",
+      },
+      {
+        question: "Kann eine regelmäßige Fensterreinigung vereinbart werden?",
+        answer: "Ja. Neben einmaligen Aufträgen können auch regelmäßige Reinigungsintervalle vereinbart werden.",
+      },
+    ],
+  },
+  {
+    titel: "Grund- & Bauendreinigung",
+    fragen: [
+      {
+        question: "Was ist eine Grundreinigung?",
+        answer:
+          "Bei einer Grundreinigung werden Bereiche intensiver gereinigt als bei einer normalen Unterhaltsreinigung. Sie eignet sich beispielsweise bei stärkeren Verschmutzungen, nach längerer Nutzung oder wenn eine besonders gründliche Reinigung erforderlich ist.",
+      },
+      {
+        question: "Bieten Sie Bauendreinigung an?",
+        answer:
+          "Ja. Wir führen Bau- und Bauendreinigungen durch und entfernen beispielsweise Staub und typische Verschmutzungen nach Bau-, Renovierungs- oder Sanierungsarbeiten.",
+      },
+    ],
+  },
+  {
+    titel: "Qualität & Sicherheit",
+    fragen: [
+      {
+        question: "Sind Sie versichert?",
+        answer:
+          "Ja. Für professionelle Reinigungsarbeiten ist ein entsprechender Versicherungsschutz wichtig. Details können bei Bedarf im Rahmen eines Angebots oder einer Zusammenarbeit geklärt werden.",
+      },
+      {
+        question: "Was passiert, wenn ich mit der Reinigung nicht zufrieden bin?",
+        answer:
+          "Ihre Zufriedenheit ist uns wichtig. Sollte etwas nicht wie vereinbart ausgeführt worden sein, kontaktieren Sie uns bitte zeitnah. Wir prüfen die Situation und finden eine passende Lösung.",
+      },
+      {
+        question: "Muss ich während der Reinigung vor Ort sein?",
+        answer:
+          "Nein. Nach vorheriger Absprache kann die Reinigung auch durchgeführt werden, wenn Sie nicht persönlich vor Ort sind.",
+      },
+      {
+        question: "Kann ich Ihnen Schlüssel oder Zugangsmöglichkeiten übergeben?",
+        answer:
+          "Bei regelmäßigen Aufträgen können sichere Zugangslösungen individuell vereinbart werden. Mit Schlüsseln und Zugangsdaten gehen wir selbstverständlich verantwortungsvoll und vertraulich um.",
+      },
+    ],
+  },
+  {
+    titel: "Reinigungsmittel & Hygiene",
+    fragen: [
+      {
+        question: "Bringen Sie Reinigungsmittel und Arbeitsmaterialien selbst mit?",
+        answer:
+          "Das wird individuell vereinbart. Auf Wunsch können wir die benötigten Reinigungsmittel und Arbeitsmaterialien mitbringen.",
+      },
+      {
+        question: "Können besondere Hygieneanforderungen berücksichtigt werden?",
+        answer:
+          "Ja. Bei Objekten mit besonderen Anforderungen stimmen wir Reinigungsabläufe, Mittel und Intervalle entsprechend dem vereinbarten Hygienekonzept ab.",
+      },
+    ],
+  },
+  {
+    titel: "Zusammenarbeit",
+    fragen: [
+      {
+        question: "Bieten Sie einmalige und regelmäßige Reinigungen an?",
+        answer: "Ja. Sie können uns sowohl für einmalige Einsätze als auch für regelmäßige Reinigungsarbeiten beauftragen.",
+      },
+      {
+        question: "Sind individuelle Leistungen möglich?",
+        answer:
+          "Ja. Jedes Objekt ist unterschiedlich. Deshalb können Leistungen, Reinigungsintervalle und Schwerpunkte individuell zusammengestellt werden.",
+      },
+      {
+        question: "Wie schnell erhalte ich ein Angebot?",
+        answer:
+          "Nach Ihrer Anfrage prüfen wir die wichtigsten Angaben. Wenn alle notwendigen Informationen vorliegen, erstellen wir Ihnen schnellstmöglich ein individuelles Angebot.",
+      },
+    ],
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: kategorien.flatMap((kat) =>
+    kat.fragen.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.answer,
+      },
+    }))
+  ),
+};
+---
+
+<Layout
+  title="Häufige Fragen"
+  description="Antworten auf häufige Fragen rund um Gebäudereinigung, Preise, Fenster- und Grundreinigung sowie Zusammenarbeit mit WA-Clean in Wiesbaden und im Rheingau."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+
+  <Breadcrumbs items={[{ label: "Startseite", href: "/" }, { label: "Häufige Fragen", href: "/faq/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal max-w-2xl">
+        <p class="eyebrow">Häufige Fragen</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Häufig gestellte Fragen</h1>
+        <p class="mt-4 text-lg text-brand-700">
+          Hier finden Sie Antworten auf häufige Fragen rund um unsere Reinigungsleistungen in Wiesbaden, im
+          Rheingau und Umgebung.
+        </p>
+      </div>
+
+      <div class="mt-12 space-y-12">
+        {kategorien.map((kat) => (
+          <div>
+            <h2 class="reveal text-xl font-semibold text-brand-950 sm:text-2xl">{kat.titel}</h2>
+            <div class="mt-5">
+              <FaqAccordion items={kat.fragen} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-brand-950 py-14 sm:py-16">
+    <div class="container-page flex flex-col items-center gap-5 text-center">
+      <h2 class="text-2xl font-semibold text-white sm:text-3xl">Noch Fragen?</h2>
+      <p class="max-w-xl text-brand-100/80">
+        Sie haben Ihre Frage nicht gefunden? Kontaktieren Sie uns gerne. Wir beraten Sie persönlich und finden
+        die passende Reinigungslösung für Ihr Objekt in Wiesbaden, im Rheingau und Umgebung.
+      </p>
+      <a href="/kontakt/" class="btn-primary">Jetzt unverbindlich anfragen</a>
+    </div>
+  </section>
+</Layout>

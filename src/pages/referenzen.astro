@@ -1,0 +1,108 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import BeforeAfter from "../components/BeforeAfter.astro";
+import LogoSlideshow from "../components/LogoSlideshow.astro";
+
+const paare = [
+  {
+    titel: "Sanitärreinigung – Waschbecken",
+    before: "/work/waschbecken-einzeln-vorher.jpg",
+    after: "/work/waschbecken-einzeln-nachher.jpg",
+  },
+  {
+    titel: "Fensterreinigung – Spinnweben entfernt",
+    before: "/work/fenster-spinnweben-vorher.jpg",
+    after: "/work/fenster-spinnweben-nachher.jpg",
+  },
+  {
+    titel: "Sanitärreinigung – Waschbeckenreihe",
+    before: "/work/waschbeckenreihe-vorher.jpg",
+    after: "/work/waschbeckenreihe-nachher.jpg",
+  },
+  {
+    titel: "Gartenpflege – Heckenschnitt & Wege",
+    before: "/work/hecke-vorher.jpg",
+    after: "/work/hecke-nachher.jpg",
+  },
+  {
+    titel: "Fensterreinigung – Gastronomie",
+    before: "/work/restaurant-fenster-vorher.jpg",
+    after: "/work/restaurant-fenster-nachher.jpg",
+  },
+];
+
+const einblicke = [
+  { src: "/work/action-glasdach-spiderman.jpg", alt: "Glasdachreinigung von innen" },
+  { src: "/work/action-fassade-fenster.jpg", alt: "Fassaden- und Fensterreinigung" },
+  { src: "/work/action-dach-hochdruck.jpg", alt: "Dachrinnenreinigung mit Hochdruckreiniger" },
+  { src: "/work/action-gardine-fenster.jpg", alt: "Fensterreinigung im Innenraum" },
+  { src: "/work/action-flur-wischen.jpg", alt: "Unterhaltsreinigung im Flur" },
+  { src: "/work/action-eingang-staubsaugen.jpg", alt: "Eingangsbereich und Treppenhausreinigung" },
+];
+---
+
+<Layout
+  title="Referenzen"
+  description="Echte Vorher-/Nachher-Ergebnisse und Einblicke in abgeschlossene Reinigungsprojekte im Rheingau und in Wiesbaden."
+>
+  <Breadcrumbs items={[{ label: "Startseite", href: "/" }, { label: "Referenzen", href: "/referenzen/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal max-w-2xl">
+        <p class="eyebrow">Referenzen</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Ergebnisse aus unseren Projekten</h1>
+        <p class="mt-4 text-lg text-brand-700">
+          Echte Vorher-/Nachher-Bilder aus abgeschlossenen Einsätzen – ohne Filter, so wie unsere Kundinnen und
+          Kunden das Ergebnis übergeben bekommen.
+        </p>
+      </div>
+
+      <div class="reveal-group mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {paare.map((p) => (
+          <BeforeAfter title={p.titel} before={p.before} after={p.after} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Einblicke</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">So arbeiten wir</h2>
+      </div>
+      <div class="reveal-group mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {einblicke.map((bild) => (
+          <div class="reveal-item aspect-[4/3] overflow-hidden rounded-lg">
+            <img src={bild.src} alt={bild.alt} class="h-full w-full object-cover" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Vertrauen</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Kunden und Partner, die auf uns setzen</h2>
+      </div>
+      <div class="mt-10">
+        <LogoSlideshow />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-brand-950 py-14 sm:py-16">
+    <div class="container-page flex flex-col items-center gap-5 text-center">
+      <h2 class="text-2xl font-semibold text-white sm:text-3xl">Überzeugen Sie sich selbst</h2>
+      <p class="max-w-xl text-brand-100/80">
+        Gerne zeigen wir Ihnen im persönlichen Gespräch, wie wir arbeiten. Fordern Sie unverbindlich ein
+        Angebot an.
+      </p>
+      <a href="/kontakt/" class="btn-primary">Kostenloses Angebot anfordern</a>
+    </div>
+  </section>
+</Layout>

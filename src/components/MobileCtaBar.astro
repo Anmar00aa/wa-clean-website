@@ -1,0 +1,108 @@
+---
+// Mobile Bottom Contact Bar: 4 gleichmäßige Bereiche (Anrufen | E-Mail |
+// WhatsApp | Anfrage). Schwarzer Hintergrund (Carbon-Ton der Palette),
+// weiße Line-Icons, keine Emojis. "Anrufen" öffnet eine kompakte Auswahl
+// mit beiden Standorten (Festnetz + Mobil), alle Nummern als tel:-Links.
+import { site, locations } from "../config/site";
+import Icon from "./Icon.astro";
+---
+
+<div
+  class="fixed inset-x-0 bottom-0 z-50 flex bg-brand-950 text-white lg:hidden"
+  style="padding-bottom: env(safe-area-inset-bottom, 0px);"
+>
+  <div class="relative flex flex-1" data-call-popover>
+    <button
+      type="button"
+      class="flex w-full flex-col items-center justify-center gap-1 py-3 text-[11px] font-medium"
+      aria-haspopup="dialog"
+      aria-expanded="false"
+      data-call-trigger
+    >
+      <Icon name="phone" class="h-5 w-5" />
+      Anrufen
+    </button>
+
+    <div
+      class="absolute bottom-full left-0 z-50 mb-2 w-64 rounded-lg bg-white p-4 text-brand-950 shadow-xl ring-1 ring-brand-950/10"
+      role="dialog"
+      aria-label="Telefonnummer nach Standort wählen"
+      data-call-panel
+      hidden
+    >
+      {locations.map((loc, i) => (
+        <div class:list={[i > 0 && "mt-3 border-t border-brand-100 pt-3"]}>
+          <p class="text-xs font-semibold uppercase tracking-wide text-brand-600">{loc.isMain ? "Wiesbaden" : "Rheingau"}</p>
+          <a href={loc.phoneHref} class="mt-1.5 flex items-center gap-2 text-sm text-brand-950 hover:text-accent-600">
+            <Icon name="phone" class="h-3.5 w-3.5 shrink-0" />
+            Festnetz: {loc.phoneDisplay}
+          </a>
+          <a href={loc.mobileHref} class="mt-1 flex items-center gap-2 text-sm text-brand-700 hover:text-accent-600">
+            <Icon name="phone" class="h-3.5 w-3.5 shrink-0" />
+            Mobil: {loc.mobileDisplay}
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <a
+    href={`mailto:${site.email}`}
+    class="flex flex-1 flex-col items-center justify-center gap-1 border-l border-white/10 py-3 text-[11px] font-medium"
+  >
+    <Icon name="mail" class="h-5 w-5" />
+    E-Mail
+  </a>
+
+  <a
+    href={site.whatsappHref}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="flex flex-1 flex-col items-center justify-center gap-1 border-l border-white/10 py-3 text-[11px] font-medium"
+  >
+    <Icon name="whatsapp" class="h-5 w-5" />
+    WhatsApp
+  </a>
+
+  <a
+    href={site.requestPath}
+    class="flex flex-1 flex-col items-center justify-center gap-1 border-l border-white/10 bg-accent-600 py-3 text-[11px] font-medium"
+  >
+    <Icon name="send" class="h-5 w-5" />
+    Anfrage
+  </a>
+</div>
+
+<script>
+  const popover = document.querySelector<HTMLElement>("[data-call-popover]");
+  const trigger = popover?.querySelector<HTMLButtonElement>("[data-call-trigger]");
+  const panel = popover?.querySelector<HTMLElement>("[data-call-panel]");
+
+  function closePanel() {
+    panel?.setAttribute("hidden", "");
+    trigger?.setAttribute("aria-expanded", "false");
+  }
+
+  function openPanel() {
+    panel?.removeAttribute("hidden");
+    trigger?.setAttribute("aria-expanded", "true");
+  }
+
+  trigger?.addEventListener("click", () => {
+    const isOpen = trigger.getAttribute("aria-expanded") === "true";
+    if (isOpen) closePanel();
+    else openPanel();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!popover) return;
+    if (!popover.contains(e.target as Node)) closePanel();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closePanel();
+      trigger?.focus();
+    }
+  });
+</script>

@@ -1,0 +1,296 @@
+---
+// Interaktiver, MAUS-/TOUCH-GESTEUERTER Fensterreinigungs-Effekt für den
+// Hero-Hintergrund. Ein Fensterwischer/Abzieher folgt dem Zeiger/Finger
+// mit sanftem Easing und zieht dabei die Grenze zwischen leicht
+// beschlagenem/verschmutztem Glas und klarer, sauberer Fläche.
+//
+// Zwei Canvas-Layer: fog-canvas (persistent, wird per destination-out
+// dauerhaft "abgezogen") + tool-canvas (wird jeden Frame neu gezeichnet,
+// damit der Wischer keine Spur aus Kopien hinterlässt).
+//
+// Der interaktive "Glasbereich" schließt die Text- und Formularzone aktiv
+// aus (siehe [data-hero-text-zone]/[data-hero-form-zone] in index.astro),
+// damit der Wischer nie über Überschrift, CTAs oder das Anfrageformular
+// läuft. Zusätzlich sitzt dieser gesamte Layer per z-index HINTER dem
+// Content und hat pointer-events:none, sodass Buttons/Formular immer
+// bedienbar bleiben, unabhängig von der Zonen-Logik.
+//
+// Touch: Damit normales vertikales Scrollen NIE blockiert wird, erhält
+// die übergeordnete Hero-<section> die Klasse `touch-pan-y` (siehe
+// index.astro) statt hier per preventDefault() einzugreifen.
+//
+// HINWEIS zu "fotorealistischen" Werkzeug-Assets: Es steht kein
+// Bildgenerierungs-Tool zur Verfügung. Die Gummilippe/der Abzieher ist
+// daher eine handgezeichnete Vektorform im Canvas (Farbverläufe,
+// Schattierung), keine Fotomontage. Für einen noch realistischeren
+// Eindruck würde sich ein transparentes PNG/WebP-Sprite eines echten
+// Fensterwischers (Draufsicht, freigestellt) eignen.
+interface Props {
+  image: string;
+  alt: string;
+}
+
+const { image, alt } = Astro.props;
+---
+
+<div class="pointer-events-none absolute inset-0 z-0 overflow-hidden" data-glass-wipe-root>
+  <img src={image} alt={alt} class="absolute inset-0 h-full w-full object-cover" style="object-position: 62% 38%;" />
+  <div class="absolute inset-0 bg-gradient-to-r from-brand-950/65 via-brand-950/25 to-brand-950/10"></div>
+  <canvas class="absolute inset-0 h-full w-full" data-fog-canvas></canvas>
+  <canvas class="absolute inset-0 h-full w-full" data-tool-canvas></canvas>
+</div>
+
+<script>
+  interface Point {
+    x: number;
+    y: number;
+  }
+
+  function setupGlassWipe(root: HTMLElement) {
+    const fogCanvas = root.querySelector<HTMLCanvasElement>("[data-fog-canvas]");
+    const toolCanvas = root.querySelector<HTMLCanvasElement>("[data-tool-canvas]");
+    const fctx = fogCanvas?.getContext("2d");
+    const tctx = toolCanvas?.getContext("2d");
+    if (!fogCanvas || !toolCanvas || !fctx || !tctx) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return; // Statischer Zustand: nur Bild + Verlauf, siehe Markup.
+
+    const isMobile = window.matchMedia("(max-width: 640px)").matches;
+
+    let width = 0;
+    let height = 0;
+    let dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+    let toolWidth = 90;
+
+    // Ausgeschlossene Zonen (Text/Formular) – Koordinaten relativ zum Root,
+    // damit sie mit den lokalen queuePoint()-Koordinaten vergleichbar sind.
+    let excludedRects: DOMRect[] = [];
+
+    function updateExcludedRects() {
+      const rootRect = root.getBoundingClientRect();
+      const zones = document.querySelectorAll<HTMLElement>("[data-hero-text-zone], [data-hero-form-zone]");
+      excludedRects = Array.from(zones).map((el) => {
+        const r = el.getBoundingClientRect();
+        return new DOMRect(r.left - rootRect.left, r.top - rootRect.top, r.width, r.height);
+      });
+    }
+
+    function isInExcludedZone(x: number, y: number) {
+      return excludedRects.some((r) => x >= r.left && x <= r.right && y >= r.top && y <= r.bottom);
+    }
+
+    function paintFog() {
+      fctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      fctx!.clearRect(0, 0, width, height);
+      fctx!.globalCompositeOperation = "source-over";
+
+      // Sehr dezente Feuchtigkeit/Beschlag statt starker Verschmutzung
+      fctx!.fillStyle = "rgba(235,240,244,0.17)";
+      fctx!.fillRect(0, 0, width, height);
+
+      const streakCount = isMobile ? 6 : 12;
+      for (let i = 0; i < streakCount; i++) {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        const len = Math.random() * 140 + 70;
+        const angle = Math.random() * Math.PI;
+        const grad = fctx!.createLinearGradient(x, y, x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+        grad.addColorStop(0, "rgba(255,255,255,0)");
+        grad.addColorStop(0.5, "rgba(255,255,255,0.07)");
+        grad.addColorStop(1, "rgba(255,255,255,0)");
+        fctx!.strokeStyle = grad;
+        fctx!.lineWidth = Math.random() * 18 + 8;
+        fctx!.beginPath();
+        fctx!.moveTo(x, y);
+        fctx!.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+        fctx!.stroke();
+      }
+
+      const spotCount = isMobile ? 2 : 5;
+      for (let i = 0; i < spotCount; i++) {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        const r = Math.random() * 60 + 40;
+        const g = fctx!.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0, "rgba(255,255,255,0.06)");
+        g.addColorStop(1, "rgba(255,255,255,0)");
+        fctx!.fillStyle = g;
+        fctx!.beginPath();
+        fctx!.arc(x, y, r, 0, Math.PI * 2);
+        fctx!.fill();
+      }
+    }
+
+    let resizeTimer = 0;
+    function resize() {
+      const rect = root.getBoundingClientRect();
+      width = Math.max(1, Math.round(rect.width));
+      height = Math.max(1, Math.round(rect.height));
+      dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+      for (const c of [fogCanvas!, toolCanvas!]) {
+        c.width = Math.round(width * dpr);
+        c.height = Math.round(height * dpr);
+      }
+      toolWidth = Math.min(150, Math.max(64, height * (isMobile ? 0.16 : 0.2)));
+      paintFog();
+      updateExcludedRects();
+    }
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resize, 150);
+    }, { passive: true });
+
+    function roundRect(c: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+      c.beginPath();
+      c.moveTo(x + r, y);
+      c.arcTo(x + w, y, x + w, y + h, r);
+      c.arcTo(x + w, y + h, x, y + h, r);
+      c.arcTo(x, y + h, x, y, r);
+      c.arcTo(x, y, x + w, y, r);
+      c.closePath();
+    }
+
+    function drawSqueegee(x: number, y: number, angle: number) {
+      const len = toolWidth * 0.62;
+      const bladeLen = len * 0.66;
+      tctx!.save();
+      tctx!.translate(x, y);
+      tctx!.rotate(angle);
+
+      const handleGrad = tctx!.createLinearGradient(-len * 0.55, 0, -bladeLen * 0.5, 0);
+      handleGrad.addColorStop(0, "#1d1d1f");
+      handleGrad.addColorStop(1, "#4b4b4d");
+      tctx!.fillStyle = handleGrad;
+      roundRect(tctx!, -len * 0.55, -4, len * 0.55 - bladeLen * 0.5 + 6, 8, 4);
+      tctx!.fill();
+
+      tctx!.shadowColor = "rgba(0,0,0,0.35)";
+      tctx!.shadowBlur = 8;
+      tctx!.shadowOffsetY = 2;
+      const barGrad = tctx!.createLinearGradient(0, -toolWidth * 0.5, 0, toolWidth * 0.5);
+      barGrad.addColorStop(0, "#c9ced2");
+      barGrad.addColorStop(0.5, "#eef1f3");
+      barGrad.addColorStop(1, "#a9afb4");
+      tctx!.fillStyle = barGrad;
+      roundRect(tctx!, -bladeLen / 2, -toolWidth * 0.5, bladeLen, toolWidth * 0.22, 4);
+      tctx!.fill();
+
+      const bladeGrad = tctx!.createLinearGradient(0, -toolWidth * 0.28, 0, toolWidth * 0.5);
+      bladeGrad.addColorStop(0, "#3a3a3c");
+      bladeGrad.addColorStop(0.15, "#1d1d1f");
+      bladeGrad.addColorStop(1, "#000000");
+      tctx!.fillStyle = bladeGrad;
+      roundRect(tctx!, -bladeLen / 2, -toolWidth * 0.28, bladeLen, toolWidth * 0.78, 6);
+      tctx!.fill();
+      tctx!.shadowColor = "transparent";
+
+      tctx!.strokeStyle = "rgba(255,255,255,0.35)";
+      tctx!.lineWidth = 1.5;
+      tctx!.beginPath();
+      tctx!.moveTo(-bladeLen / 2 + 4, toolWidth * 0.46);
+      tctx!.lineTo(bladeLen / 2 - 4, toolWidth * 0.46);
+      tctx!.stroke();
+
+      tctx!.restore();
+    }
+
+    function wipeSegment(from: Point, to: Point) {
+      fctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      fctx!.globalCompositeOperation = "destination-out";
+      fctx!.lineCap = "round";
+      fctx!.lineJoin = "round";
+
+      fctx!.strokeStyle = "rgba(0,0,0,0.42)";
+      fctx!.lineWidth = toolWidth * 1.3;
+      fctx!.beginPath();
+      fctx!.moveTo(from.x, from.y);
+      fctx!.lineTo(to.x, to.y);
+      fctx!.stroke();
+
+      fctx!.strokeStyle = "rgba(0,0,0,1)";
+      fctx!.lineWidth = toolWidth;
+      fctx!.beginPath();
+      fctx!.moveTo(from.x, from.y);
+      fctx!.lineTo(to.x, to.y);
+      fctx!.stroke();
+    }
+
+    function clearToolLayer() {
+      tctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      tctx!.clearRect(0, 0, width, height);
+    }
+
+    // ---- Eingabe ---------------------------------------------------------
+    let targetPoint: Point | null = null;
+    let toolPos: Point | null = null;
+    let toolAngle = 0;
+    let pointerActive = false;
+    let pendingFlush = false;
+
+    function queuePoint(clientX: number, clientY: number) {
+      const rect = root.getBoundingClientRect();
+      const localX = clientX - rect.left;
+      const localY = clientY - rect.top;
+
+      if (localX < 0 || localX > rect.width || localY < 0 || localY > rect.height) {
+        pointerActive = false;
+        return;
+      }
+      if (isInExcludedZone(localX, localY)) {
+        pointerActive = false;
+        return;
+      }
+
+      targetPoint = { x: localX, y: localY };
+      pointerActive = true;
+
+      if (!pendingFlush) {
+        pendingFlush = true;
+        requestAnimationFrame(tick);
+      }
+    }
+
+    window.addEventListener("pointermove", (e) => queuePoint(e.clientX, e.clientY), { passive: true });
+    window.addEventListener("pointerleave", () => { pointerActive = false; }, { passive: true });
+    window.addEventListener("touchmove", (e) => {
+      const t = e.touches[0];
+      if (t) queuePoint(t.clientX, t.clientY);
+    }, { passive: true });
+    window.addEventListener("touchend", () => { pointerActive = false; }, { passive: true });
+
+    function tick() {
+      pendingFlush = false;
+      clearToolLayer();
+
+      if (!pointerActive || !targetPoint) return;
+
+      if (!toolPos) toolPos = { ...targetPoint };
+      const prev = { ...toolPos };
+
+      // Sanftes Easing statt 1:1-Teleport – wirkt flüssig, aber weiterhin direkt.
+      toolPos.x += (targetPoint.x - toolPos.x) * 0.45;
+      toolPos.y += (targetPoint.y - toolPos.y) * 0.45;
+
+      const dx = toolPos.x - prev.x;
+      const dy = toolPos.y - prev.y;
+      if (Math.hypot(dx, dy) > 0.6) {
+        toolAngle = Math.atan2(dy, dx) + Math.PI / 2;
+        wipeSegment(prev, toolPos);
+      }
+
+      drawSqueegee(toolPos.x, toolPos.y, toolAngle);
+
+      // Weiter verfolgen, solange sich Ziel und Position noch unterscheiden
+      // oder der Zeiger aktiv bleibt (hält die Neigung/Position aktuell).
+      if (pointerActive) {
+        pendingFlush = true;
+        requestAnimationFrame(tick);
+      }
+    }
+
+    resize();
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-glass-wipe-root]").forEach(setupGlassWipe);
+</script>

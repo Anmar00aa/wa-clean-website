@@ -1,0 +1,277 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import ContactForm from "../components/ContactForm.astro";
+import QuickRequestForm from "../components/QuickRequestForm.astro";
+import EinsatzgebietMap from "../components/EinsatzgebietMap.astro";
+import PartnerLogos from "../components/PartnerLogos.astro";
+import GlassWipeHero from "../components/GlassWipeHero.astro";
+import Icon from "../components/Icon.astro";
+import { site, regions } from "../config/site";
+
+const allServices = (await getCollection("leistungen")).sort(
+  (a, b) => a.data.reihenfolge - b.data.reihenfolge
+);
+const featuredServices = allServices.filter((s) => s.data.featured);
+const allServiceTitles = allServices.map((s) => s.data.title);
+
+const trustPoints = [
+  {
+    icon: "shield" as const,
+    title: "Zuverlässiger Service",
+    text: "Feste Termine, die eingehalten werden – planbar für Ihren Betrieb oder Alltag.",
+  },
+  {
+    icon: "sparkle" as const,
+    title: "Individuelle Reinigungskonzepte",
+    text: "Kein Standardpaket von der Stange, sondern ein Plan, der zu Ihrem Objekt passt.",
+  },
+  {
+    icon: "message" as const,
+    title: "Schnelle Kommunikation",
+    text: "Kurze Wege zu einem festen Ansprechpartner, ohne lange Wartezeiten.",
+  },
+  {
+    icon: "check" as const,
+    title: "Professionelle Arbeitsweise",
+    text: "Strukturierte Abläufe und sorgfältige Ausführung bei jedem Einsatz.",
+  },
+  {
+    icon: "clock" as const,
+    title: "Transparente Angebote",
+    text: "Klar kalkulierte Angebote ohne versteckte Kosten oder Überraschungen.",
+  },
+];
+---
+
+<Layout
+  title="Professionelle Gebäudereinigung für Unternehmen & Privatkunden"
+  description="Gebäudereinigung im Rheingau, in Wiesbaden und Mainz – Unterhaltsreinigung, Büroreinigung, Fensterreinigung und mehr. Zuverlässig, professionell, unverbindliches Angebot."
+>
+  <!-- Hero -->
+  <section class="relative touch-pan-y overflow-hidden bg-brand-950 lg:min-h-[660px]">
+    <GlassWipeHero image="/work/action-fensterwischer-fassade.jpg" alt="WA-Clean Mitarbeiter bei der professionellen Fensterreinigung einer Glasfassade" />
+    <div class="container-page relative z-10 py-16 sm:py-20 lg:py-24">
+      <!-- Textgruppe: bewusst als EINE Einheit, kompakter/weiter links als zuvor -->
+      <div class="lg:max-w-[46%] xl:max-w-[42%]" data-hero-text-zone>
+        <p class="eyebrow text-accent-400">Gebäudereinigung im {regions[0]}</p>
+        <h1 class="mt-4 text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-[3.1rem]">
+          Professionelle Gebäudereinigung für Unternehmen &amp; Privatkunden
+        </h1>
+        <p class="mt-5 max-w-xl text-[1.3125rem] font-light leading-relaxed text-brand-100/85">
+          Von der Büroreinigung bis zum Winterdienst: Wir übernehmen die Reinigung und Pflege Ihres Gebäudes
+          zuverlässig, sorgfältig und nach einem Plan, der zu Ihnen passt – im {regions[0]}, in {regions[1]} und {regions[2]}.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href="/kontakt/" class="btn-primary text-base">
+            Kostenloses Angebot anfordern
+          </a>
+          <a href={site.phoneHref} class="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-[19px] py-[10px] text-[0.95rem] text-white transition-colors hover:bg-white/10">
+            <Icon name="phone" class="h-4 w-4" />
+            Jetzt anrufen
+          </a>
+        </div>
+        <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-brand-100/70">
+          <li class="flex items-center gap-1.5"><Icon name="check" class="h-4 w-4 text-accent-400" /> Gewerbe &amp; Privat</li>
+          <li class="flex items-center gap-1.5"><Icon name="check" class="h-4 w-4 text-accent-400" /> Individuelle Konzepte</li>
+          <li class="flex items-center gap-1.5"><Icon name="check" class="h-4 w-4 text-accent-400" /> Unverbindliches Angebot</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Quick-Anfrageformular: rechts, an der Position des früheren Teamfotos -->
+    <div
+      class="relative z-10 px-5 pb-14 sm:px-6 lg:absolute lg:inset-y-0 lg:right-6 lg:flex lg:w-[370px] lg:items-center lg:px-0 lg:pb-0 xl:w-[400px]"
+      data-hero-form-zone
+    >
+      <div class="w-full">
+        <QuickRequestForm services={allServiceTitles} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Partner -->
+  <section class="py-12 sm:py-14">
+    <div class="container-page">
+      <p class="reveal mb-8 text-center text-sm font-medium text-brand-600">Partner, die uns vertrauen</p>
+      <PartnerLogos />
+    </div>
+  </section>
+
+  <!-- Leistungen -->
+  <section id="leistungen" class="py-16 sm:py-20 lg:py-24">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Unsere Leistungen</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Reinigung aus einer Hand</h2>
+        <p class="mt-4 text-brand-700">
+          Vom laufenden Unterhalt bis zur einmaligen Grundreinigung – wählen Sie die Leistung, die zu Ihrem
+          Gebäude passt, oder lassen Sie sich beraten.
+        </p>
+      </div>
+
+      <div class="reveal-group mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {featuredServices.map((service) => (
+          <ServiceCard
+            title={service.data.title}
+            description={service.data.kurzbeschreibung}
+            href={`/leistungen/${service.id}/`}
+            icon={service.data.icon}
+          />
+        ))}
+      </div>
+
+      <div class="mt-10 text-center">
+        <a href="/leistungen/" class="btn-secondary">
+          Alle Leistungen ansehen
+          <Icon name="chevron-right" class="h-4 w-4" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Einsatzgebiet -->
+  <section class="bg-warm-50 py-16 sm:py-20 lg:py-24">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div class="reveal">
+        <p class="eyebrow">Einsatzgebiet</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Für Sie da in Wiesbaden, Rheingau &amp; Mainz</h2>
+        <p class="mt-4 text-brand-700">
+          Unser Schwerpunkt liegt im {regions[0]} und den angrenzenden Städten – mit kurzen Anfahrtswegen
+          und guter Ortskenntnis. Auf Anfrage übernehmen wir auch Objekte in der weiteren Umgebung.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          {["Wiesbaden", "Rheingau"].map((region) => (
+            <span class="rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white">
+              {region}
+            </span>
+          ))}
+          {regions.filter((r) => r !== "Wiesbaden" && r !== "Rheingau").map((region) => (
+            <span class="rounded-full bg-white px-4 py-2 text-sm font-medium text-brand-950 ring-1 ring-inset ring-brand-100">
+              {region}
+            </span>
+          ))}
+        </div>
+        <a href="/einsatzgebiet/" class="btn-secondary mt-8">
+          Einsatzgebiet im Detail
+          <Icon name="chevron-right" class="h-4 w-4" />
+        </a>
+      </div>
+      <EinsatzgebietMap class="reveal" />
+    </div>
+  </section>
+
+  <!-- Vertrauen -->
+  <section class="py-16 sm:py-20 lg:py-24">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Warum wir</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Worauf Sie sich verlassen können</h2>
+      </div>
+
+      <div class="reveal-group mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+        {trustPoints.map((point) => (
+          <div class="reveal-item text-center sm:text-left">
+            <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-brand-950 sm:mx-0">
+              <Icon name={point.icon} class="h-6 w-6" />
+            </span>
+            <h3 class="mt-4 text-base font-semibold text-brand-950">{point.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-brand-700">{point.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Über uns Teaser -->
+  <section class="bg-warm-100 py-16 sm:py-20 lg:py-24">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div class="reveal order-2 aspect-[4/3] w-full overflow-hidden rounded-lg lg:order-1">
+        <img
+          src="/work/action-gardine-fenster.jpg"
+          alt="WA-Clean Mitarbeiter bei der Fensterreinigung"
+          class="h-full w-full object-cover"
+        />
+      </div>
+      <div class="reveal order-1 lg:order-2">
+        <p class="eyebrow">Über uns</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Persönlich, verlässlich, direkt</h2>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          Uns ist wichtig, dass Kundinnen und Kunden uns langfristig vertrauen können. Statt anonymer
+          Standardprozesse setzen wir auf direkte Kommunikation, feste Ansprechpartner und eine Arbeitsweise,
+          die auf Qualität statt auf Schnelligkeit um jeden Preis ausgelegt ist.
+        </p>
+        <a href="/ueber-uns/" class="btn-secondary mt-8">
+          Mehr über uns erfahren
+          <Icon name="chevron-right" class="h-4 w-4" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Referenzen Teaser -->
+  <section class="py-16 sm:py-20 lg:py-24">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Ergebnisse</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Referenzen</h2>
+        <p class="mt-4 text-brand-700">
+          Hier zeigen wir Vorher-/Nachher-Ergebnisse aus abgeschlossenen Projekten.
+        </p>
+      </div>
+      <div class="reveal-group mt-12 grid gap-5 sm:grid-cols-3">
+        <div class="reveal-item aspect-square w-full overflow-hidden rounded-lg">
+          <img src="/work/waschbeckenreihe-nachher.jpg" alt="Sanitärreinigung – Ergebnis" class="h-full w-full object-cover" loading="lazy" />
+        </div>
+        <div class="reveal-item aspect-square w-full overflow-hidden rounded-lg">
+          <img src="/work/hecke-nachher.jpg" alt="Gartenpflege – Ergebnis" class="h-full w-full object-cover" loading="lazy" />
+        </div>
+        <div class="reveal-item aspect-square w-full overflow-hidden rounded-lg">
+          <img src="/work/fenster-spinnweben-nachher.jpg" alt="Fensterreinigung – Ergebnis" class="h-full w-full object-cover" loading="lazy" />
+        </div>
+      </div>
+      <div class="mt-10 text-center">
+        <a href="/referenzen/" class="btn-secondary">
+          Alle Referenzen ansehen
+          <Icon name="chevron-right" class="h-4 w-4" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bewertung -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal card flex flex-col items-center gap-3 bg-accent-100 p-8 text-center ring-1 ring-inset ring-accent-600/10 sm:p-12">
+        <div class="flex gap-1 text-accent-600" aria-hidden="true">
+          {Array.from({ length: 5 }).map(() => <Icon name="star" class="h-5 w-5" />)}
+        </div>
+        <p class="text-xl font-semibold text-brand-950 sm:text-2xl">Wie zufrieden waren Sie mit uns?</p>
+        <p class="max-w-md text-sm text-brand-700">
+          Ihre ehrliche Meinung hilft uns, unseren Service weiter zu verbessern – in nur wenigen Sekunden.
+        </p>
+        <a href="/bewertungen/" class="btn-primary mt-1">Jetzt bewerten</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Angebot / Kontakt -->
+  <section id="angebot" class="bg-warm-50 py-16 sm:py-20 lg:py-24">
+    <div class="container-page grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-start">
+      <div class="reveal">
+        <p class="eyebrow">Kostenloses Angebot</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Jetzt unverbindlich anfragen</h2>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          Beschreiben Sie kurz Ihr Anliegen – wir melden uns zeitnah mit einem passenden, unverbindlichen
+          Angebot bei Ihnen. Ganz ohne Verpflichtung.
+        </p>
+        <div class="mt-6 space-y-3 text-sm text-brand-900">
+          <p class="flex items-center gap-2"><Icon name="phone" class="h-4 w-4 text-accent-600" /> {site.phoneDisplay}</p>
+          <p class="flex items-center gap-2"><Icon name="mail" class="h-4 w-4 text-accent-600" /> {site.email}</p>
+        </div>
+      </div>
+      <ContactForm services={allServiceTitles} />
+    </div>
+  </section>
+</Layout>

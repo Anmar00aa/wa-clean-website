@@ -1,0 +1,48 @@
+---
+// Endlos-Marquee für Partner-/Kundenlogos: EINE horizontale Zeile, langsam
+// und nahtlos von rechts nach links laufend. Logos bleiben unangetastet in
+// ihren Originalfarben (kein Grayscale/Filter) und werden nur einheitlich
+// in der Höhe skaliert (object-contain, keine Verzerrung).
+import { partners } from "../config/site";
+---
+
+<div class="group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]" data-marquee>
+  <div class="flex w-max items-center gap-12 sm:gap-16" data-marquee-track>
+    {[...partners, ...partners].map((partner, i) => (
+      <div class="flex h-12 shrink-0 items-center sm:h-14" aria-hidden={i >= partners.length ? "true" : undefined}>
+        <img
+          src={partner.logo}
+          alt={partner.name}
+          class="h-full w-auto max-w-[9rem] object-contain sm:max-w-[10rem]"
+          loading="lazy"
+        />
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  [data-marquee-track] {
+    animation: partner-marquee 42s linear infinite;
+  }
+
+  [data-marquee]:hover [data-marquee-track] {
+    animation-play-state: paused;
+  }
+
+  @keyframes partner-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      /* Zwei identische Logo-Sets hintereinander -> -50% ist nahtlos. */
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-marquee-track] {
+      animation: none;
+    }
+  }
+</style>

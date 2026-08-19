@@ -1,0 +1,166 @@
+---
+import { site, mainNav, locations } from "../config/site";
+import Icon from "./Icon.astro";
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string) {
+  if (href === "/") return currentPath === "/";
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="sticky top-0 z-50 border-b border-brand-950/[0.06] bg-white/95 backdrop-blur">
+  <div class="container-page flex h-16 items-center justify-between sm:h-20">
+    <a href="/" class="flex items-center">
+      <img src="/logo.png" alt={site.name} class="h-14 w-14 sm:h-16 sm:w-16" width="64" height="64" />
+    </a>
+
+    <nav class="hidden lg:block" aria-label="Hauptnavigation">
+      <ul class="flex items-center gap-8">
+        {mainNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class:list={[
+                "text-[0.95rem] font-medium transition-colors hover:text-accent-600",
+                isActive(item.href) ? "text-accent-600" : "text-brand-900",
+              ]}
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="hidden items-center gap-3 lg:flex">
+      <div class="relative" data-phone-popover>
+        <button
+          type="button"
+          class="flex items-center gap-2 text-sm font-semibold text-brand-900 hover:text-accent-600"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          data-phone-trigger
+        >
+          <Icon name="phone" class="h-4 w-4" />
+          Wiesbaden | Rheingau
+        </button>
+
+        <div
+          class="absolute right-0 top-full z-50 mt-3 hidden w-72 rounded-lg bg-white p-4 ring-1 ring-brand-950/10 shadow-xl"
+          role="dialog"
+          aria-label="Telefonnummern nach Standort"
+          data-phone-panel
+          hidden
+        >
+          {locations.map((loc, i) => (
+            <div class:list={[i > 0 && "mt-3 border-t border-brand-100 pt-3"]}>
+              <p class="text-xs font-semibold uppercase tracking-wide text-brand-600">{loc.isMain ? "Wiesbaden" : "Rheingau"}</p>
+              <a href={loc.phoneHref} class="mt-1.5 flex items-center gap-2 text-sm text-brand-950 hover:text-accent-600">
+                <Icon name="phone" class="h-3.5 w-3.5 shrink-0" />
+                {loc.phoneDisplay}
+              </a>
+              <a href={loc.mobileHref} class="mt-1 flex items-center gap-2 text-sm text-brand-700 hover:text-accent-600">
+                <Icon name="phone" class="h-3.5 w-3.5 shrink-0" />
+                {loc.mobileDisplay} <span class="text-xs text-brand-500">(mobil)</span>
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+      <a href="/kontakt/" class="btn-primary">Angebot anfordern</a>
+    </div>
+
+    <button
+      id="menu-toggle"
+      type="button"
+      class="flex h-10 w-10 items-center justify-center rounded-md text-brand-900 lg:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Menü öffnen"
+    >
+      <Icon name="menu" class="h-6 w-6" id="menu-icon-open" />
+      <Icon name="close" class="hidden h-6 w-6" id="menu-icon-close" />
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden border-t border-brand-950/[0.06] bg-white lg:hidden">
+    <nav class="container-page flex flex-col gap-1 py-4" aria-label="Mobile Navigation">
+      {mainNav.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            "rounded-md px-3 py-2.5 text-base font-medium",
+            isActive(item.href) ? "bg-brand-50 text-accent-600" : "text-brand-900",
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+      <a href="/kontakt/" class="btn-primary mt-3 w-full">Angebot anfordern</a>
+      <a href={site.phoneHref} class="btn-secondary mt-2 w-full">
+        <Icon name="phone" class="h-4 w-4" />
+        {site.phoneDisplay}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  const iconOpen = document.getElementById("menu-icon-open");
+  const iconClose = document.getElementById("menu-icon-close");
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = menu?.classList.contains("hidden") === false;
+    menu?.classList.toggle("hidden");
+    iconOpen?.classList.toggle("hidden");
+    iconClose?.classList.toggle("hidden");
+    toggle.setAttribute("aria-expanded", String(!isOpen));
+  });
+
+  menu?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      menu.classList.add("hidden");
+      iconOpen?.classList.remove("hidden");
+      iconClose?.classList.add("hidden");
+      toggle?.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  // Telefon-Popover: Wiesbaden | Rheingau
+  const phonePopover = document.querySelector<HTMLElement>("[data-phone-popover]");
+  const phoneTrigger = phonePopover?.querySelector<HTMLButtonElement>("[data-phone-trigger]");
+  const phonePanel = phonePopover?.querySelector<HTMLElement>("[data-phone-panel]");
+
+  function closePhonePanel() {
+    phonePanel?.setAttribute("hidden", "");
+    phoneTrigger?.setAttribute("aria-expanded", "false");
+  }
+
+  function openPhonePanel() {
+    phonePanel?.removeAttribute("hidden");
+    phoneTrigger?.setAttribute("aria-expanded", "true");
+  }
+
+  phoneTrigger?.addEventListener("click", () => {
+    const isOpen = phoneTrigger.getAttribute("aria-expanded") === "true";
+    if (isOpen) closePhonePanel();
+    else openPhonePanel();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!phonePopover) return;
+    if (!phonePopover.contains(e.target as Node)) closePhonePanel();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closePhonePanel();
+      phoneTrigger?.focus();
+    }
+  });
+</script>

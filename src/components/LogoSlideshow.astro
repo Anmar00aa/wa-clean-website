@@ -1,0 +1,95 @@
+---
+// Einfache, abhängigkeitsfreie Fade-Slideshow für Partner-Logos.
+// Pausiert bei Hover/Fokus, respektiert prefers-reduced-motion (dann kein
+// Autoplay, nur manuelle Navigation über die Punkte).
+import { partners } from "../config/site";
+
+const uid = Math.random().toString(36).slice(2, 8);
+---
+
+<div class="reveal mx-auto max-w-xl" data-slideshow={uid}>
+  <div class="relative h-48 overflow-hidden rounded-xl border border-brand-100 bg-white sm:h-56">
+    {partners.map((partner, i) => (
+      <div
+        class="slide absolute inset-0 flex items-center justify-center p-6 transition-opacity duration-700 ease-out"
+        style={`opacity:${i === 0 ? 1 : 0};`}
+        aria-hidden={i === 0 ? "false" : "true"}
+      >
+        <img src={partner.logo} alt={partner.name} class="max-h-32 max-w-full object-contain sm:max-h-36" loading="lazy" />
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-4 flex items-center justify-center gap-2">
+    {partners.map((partner, i) => (
+      <button
+        type="button"
+        class="dot h-2 w-2 rounded-full bg-brand-100 transition-colors"
+        aria-label={`${partner.name} anzeigen`}
+        data-index={i}
+      />
+    ))}
+  </div>
+</div>
+
+<script define:vars={{ uid }}>
+  (function () {
+    const root = document.querySelector(`[data-slideshow="${uid}"]`);
+    if (!root) return;
+    const slides = Array.from(root.querySelectorAll(".slide"));
+    const dots = Array.from(root.querySelectorAll(".dot"));
+    if (slides.length < 2) return;
+
+    let index = 0;
+    let timer = null;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function show(i) {
+      slides[index].style.opacity = "0";
+      slides[index].setAttribute("aria-hidden", "true");
+      dots[index].classList.remove("bg-accent-600");
+      dots[index].classList.add("bg-brand-100");
+
+      index = (i + slides.length) % slides.length;
+
+      slides[index].style.opacity = "1";
+      slides[index].setAttribute("aria-hidden", "false");
+      dots[index].classList.remove("bg-brand-100");
+      dots[index].classList.add("bg-accent-600");
+    }
+
+    function next() {
+      show(index + 1);
+    }
+
+    function start() {
+      if (reduceMotion || timer) return;
+      timer = window.setInterval(next, 3500);
+    }
+
+    function stop() {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", () => {
+        stop();
+        show(i);
+        start();
+      });
+    });
+
+    root.addEventListener("mouseenter", stop);
+    root.addEventListener("mouseleave", start);
+    root.addEventListener("focusin", stop);
+    root.addEventListener("focusout", start);
+
+    dots[0].classList.remove("bg-brand-100");
+    dots[0].classList.add("bg-accent-600");
+
+    start();
+  })();
+</script>

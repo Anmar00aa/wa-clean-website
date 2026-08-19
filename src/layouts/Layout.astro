@@ -1,0 +1,89 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import MobileCtaBar from "../components/MobileCtaBar.astro";
+import MotionScripts from "../components/MotionScripts.astro";
+import { site, regions, locations } from "../config/site";
+
+interface Props {
+  title: string;
+  description: string;
+  noIndex?: boolean;
+}
+
+const { title, description, noIndex = false } = Astro.props;
+
+const pageTitle = `${title} | ${site.name}`;
+const canonicalURL = new URL(Astro.url.pathname, site.url);
+const ogImage = new URL("/og-image.svg", site.url);
+
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: site.legalName,
+  image: ogImage.toString(),
+  url: site.url,
+  telephone: site.phoneHref.replace("tel:", ""),
+  email: site.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.street,
+    postalCode: site.zip,
+    addressLocality: site.city,
+    addressCountry: "DE",
+  },
+  areaServed: regions.map((r) => ({ "@type": "Place", name: r })),
+  priceRange: "$$",
+  department: locations
+    .filter((loc) => !loc.isMain)
+    .map((loc) => ({
+      "@type": "LocalBusiness",
+      name: `${site.legalName} – ${loc.label}`,
+      telephone: loc.phoneHref.replace("tel:", ""),
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: loc.street,
+        postalCode: loc.zip,
+        addressLocality: loc.city,
+        addressCountry: "DE",
+      },
+    })),
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#1d1d1f" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessJsonLd)} is:inline />
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <Header />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+    <MobileCtaBar />
+    <MotionScripts />
+  </body>
+</html>

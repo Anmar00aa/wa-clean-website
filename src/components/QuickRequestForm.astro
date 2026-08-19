@@ -1,0 +1,120 @@
+---
+// Kompaktes Anfrageformular für den Hero. Nutzt bewusst dieselbe
+// Validierungs-/Spam-Schutz-/Erfolgslogik wie ContactForm.astro
+// (src/lib/formSubmit.ts) statt ein zweites, unabhängiges System zu bauen.
+import { site, contactRegions } from "../config/site";
+
+interface Props {
+  services: string[];
+}
+
+const { services } = Astro.props;
+---
+
+<div class="reveal card p-5 shadow-xl shadow-brand-950/10 sm:p-6" data-inline-form-wrap>
+  <p class="text-lg font-semibold text-brand-950">Kostenloses Angebot anfordern</p>
+  <p class="mt-1 text-sm text-brand-600">In wenigen Schritten zu Ihrem unverbindlichen Angebot.</p>
+
+  <form class="mt-5 grid gap-3.5" action="#" method="POST" data-inline-form novalidate>
+    <!-- Honeypot: für Menschen unsichtbar, Bots füllen es oft blind aus -->
+    <div class="hidden" aria-hidden="true">
+      <label for="hero-website">Bitte freilassen</label>
+      <input type="text" id="hero-website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div>
+      <label for="hero-name" class="sr-only">Name / Firma</label>
+      <input
+        type="text"
+        id="hero-name"
+        name="name"
+        required
+        autocomplete="name"
+        placeholder="Name / Firma *"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+      />
+    </div>
+
+    <div class="grid gap-3.5 sm:grid-cols-2">
+      <div>
+        <label for="hero-telefon" class="sr-only">Telefonnummer</label>
+        <input
+          type="tel"
+          id="hero-telefon"
+          name="telefon"
+          required
+          autocomplete="tel"
+          placeholder="Telefonnummer *"
+          class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+        />
+      </div>
+      <div>
+        <label for="hero-email" class="sr-only">E-Mail</label>
+        <input
+          type="email"
+          id="hero-email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder="E-Mail *"
+          class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label for="hero-leistung" class="sr-only">Gewünschte Leistung</label>
+      <select
+        id="hero-leistung"
+        name="leistung"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600"
+      >
+        <option value="">Gewünschte Leistung (optional)</option>
+        {services.map((s) => <option value={s}>{s}</option>)}
+        <option value="Sonstiges">Sonstiges / unsicher</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="hero-region" class="sr-only">Region</label>
+      <select
+        id="hero-region"
+        name="region"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600"
+      >
+        <option value="">Region (optional)</option>
+        {contactRegions.map((r) => <option value={r}>{r}</option>)}
+      </select>
+    </div>
+
+    <label class="flex items-start gap-2.5 text-xs text-brand-900/70">
+      <input
+        type="checkbox"
+        name="datenschutz"
+        required
+        class="mt-0.5 h-3.5 w-3.5 rounded border-brand-950/20 text-accent-600 focus:ring-accent-600"
+      />
+      <span>
+        Ich stimme der <a href="/datenschutz/" class="underline hover:text-accent-600">Datenschutzerklärung</a> zu. *
+      </span>
+    </label>
+
+    <button type="submit" class="btn-primary w-full">Kostenloses Angebot anfordern</button>
+    <p class="text-center text-xs text-brand-600">Unverbindlich &amp; kostenlos</p>
+  </form>
+
+  <div class="py-4 text-center" data-inline-form-success hidden>
+    <p class="text-base font-semibold text-brand-950">Vielen Dank für Ihre Anfrage!</p>
+    <p class="mt-1.5 text-sm text-brand-700">Wir melden uns schnellstmöglich mit einem unverbindlichen Angebot bei Ihnen.</p>
+  </div>
+</div>
+
+<script>
+  import { setupInlineForm } from "../lib/formSubmit";
+
+  document.querySelectorAll<HTMLElement>("[data-inline-form-wrap]").forEach((wrap) => {
+    const form = wrap.querySelector<HTMLFormElement>("[data-inline-form]");
+    const successBox = wrap.querySelector<HTMLElement>("[data-inline-form-success]");
+    if (form) setupInlineForm(form, successBox);
+  });
+</script>

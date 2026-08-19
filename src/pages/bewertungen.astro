@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import ReviewFlow from "../components/ReviewFlow.astro";
+
+const allServiceTitles = (await getCollection("leistungen"))
+  .sort((a, b) => a.data.reihenfolge - b.data.reihenfolge)
+  .map((s) => s.data.title);
+---
+
+<Layout
+  title="Bewertungen"
+  description="Wie zufrieden waren Sie mit unserem Service? Bewerten Sie WA-Clean und helfen Sie uns, noch besser zu werden."
+>
+  <Breadcrumbs items={[{ label: "Startseite", href: "/" }, { label: "Bewertungen", href: "/bewertungen/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Ihre Meinung zählt</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Wie zufrieden waren Sie mit unserem Service?</h1>
+        <p class="mt-4 text-lg text-brand-700">Ihre Meinung hilft uns, unseren Service weiter zu verbessern.</p>
+      </div>
+
+      <div class="mx-auto mt-10 max-w-2xl">
+        <ReviewFlow services={allServiceTitles} />
+      </div>
+    </div>
+  </section>
+</Layout>

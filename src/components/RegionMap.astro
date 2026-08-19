@@ -1,0 +1,73 @@
+---
+// Dezente, ABSTRAKTE Regions-Visualisierung (bewusst keine echte Landkarte,
+// um keine geografisch ungenaue Darstellung zu riskieren). Wiesbaden und
+// Rheingau werden als die beiden Hauptstandorte hervorgehoben, die übrigen
+// Orte aus der regions-Liste als kleinere, angebundene Punkte.
+import { regions } from "../config/site";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+// Wiesbaden & Rheingau (Oestrich-Winkel) sind die beiden Hauptstandorte
+// und werden separat/größer dargestellt. "Oestrich-Winkel" ist der Ort des
+// Rheingau-Standorts und wird daher nicht zusätzlich als Nebenpunkt gezeigt.
+// Die übrigen Orte aus regions[] werden automatisch als kleinere
+// Nebenpunkte übernommen (keine Duplikate, keine erfundenen Orte).
+const secondaryRegions = regions.filter(
+  (r) => r !== "Wiesbaden" && r !== "Rheingau" && r !== "Oestrich-Winkel"
+);
+
+const secondaryPositions = [
+  { x: 80, y: 30 },
+  { x: 90, y: 66 },
+  { x: 32, y: 90 },
+  { x: 12, y: 56 },
+];
+---
+
+<div class:list={["relative flex items-center justify-center overflow-hidden rounded-lg bg-white ring-1 ring-inset ring-brand-100", className]}>
+  <svg viewBox="0 0 100 100" class="h-full w-full" role="img" aria-label="Schematische Darstellung des Einsatzgebiets mit den Standorten Wiesbaden und Rheingau">
+    <!-- Verbindungslinie zwischen den beiden Hauptstandorten -->
+    <line x1="34" y1="40" x2="66" y2="58" stroke="var(--color-accent-400)" stroke-width="0.6" stroke-dasharray="2 2" />
+
+    <!-- Verbindungen zu den Nebenorten -->
+    {secondaryPositions.map((p) => (
+      <line x1="50" y1="49" x2={p.x} y2={p.y} stroke="var(--color-brand-100)" stroke-width="0.5" />
+    ))}
+
+    <!-- Nebenorte -->
+    {secondaryPositions.map((p, i) => (
+      <g>
+        <circle cx={p.x} cy={p.y} r="2.2" fill="var(--color-brand-50)" stroke="var(--color-brand-600)" stroke-width="0.6" />
+        {secondaryRegions[i] && (
+          <text x={p.x} y={p.y - 4} text-anchor="middle" font-size="3.4" fill="var(--color-brand-600)" font-family="var(--font-sans)">
+            {secondaryRegions[i]}
+          </text>
+        )}
+      </g>
+    ))}
+
+    <!-- Hauptstandort: Wiesbaden -->
+    <circle cx="34" cy="40" r="5.5" fill="var(--color-accent-600)" opacity="0.14" />
+    <circle cx="34" cy="40" r="3.2" fill="var(--color-accent-600)" />
+    <text x="34" y="31" text-anchor="middle" font-size="4.4" font-weight="600" fill="var(--color-brand-950)" font-family="var(--font-sans)">
+      Wiesbaden
+    </text>
+    <text x="34" y="52" text-anchor="middle" font-size="3" fill="var(--color-brand-600)" font-family="var(--font-sans)">
+      Hauptniederlassung
+    </text>
+
+    <!-- Hauptstandort: Rheingau -->
+    <circle cx="66" cy="58" r="5.5" fill="var(--color-accent-600)" opacity="0.14" />
+    <circle cx="66" cy="58" r="3.2" fill="var(--color-accent-600)" />
+    <text x="66" y="70" text-anchor="middle" font-size="4.4" font-weight="600" fill="var(--color-brand-950)" font-family="var(--font-sans)">
+      Rheingau
+    </text>
+    <text x="66" y="49" text-anchor="middle" font-size="3" fill="var(--color-brand-600)" font-family="var(--font-sans)">
+      Standort Oestrich-Winkel
+    </text>
+  </svg>
+</div>

@@ -1,0 +1,30 @@
+---
+import Icon from "./Icon.astro";
+import type { IconName } from "./Icon.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  icon: string;
+}
+
+const { title, description, href, icon } = Astro.props;
+---
+
+<a
+  href={href}
+  class="reveal-item card group flex flex-col gap-4 p-6 transition-colors duration-150 hover:ring-brand-950/25"
+>
+  <span class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-50 text-brand-950">
+    <Icon name={icon as IconName} class="h-5 w-5" />
+  </span>
+  <div>
+    <h3 class="text-lg font-semibold text-brand-950">{title}</h3>
+    <p class="mt-2 text-[0.95rem] leading-relaxed text-brand-700">{description}</p>
+  </div>
+  <span class="mt-auto flex items-center gap-1.5 text-sm font-medium text-accent-600">
+    Mehr erfahren
+    <Icon name="chevron-right" class="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+  </span>
+</a>

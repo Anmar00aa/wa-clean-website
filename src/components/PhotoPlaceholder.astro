@@ -1,0 +1,30 @@
+---
+// Hochwertiger Platzhalter für echte Projektfotos.
+// Sobald Bildmaterial vorliegt, einfach durch <img> ersetzen.
+interface Props {
+  label?: string;
+  class?: string;
+  variant?: "dark" | "light";
+}
+
+const { label = "Foto folgt in Kürze", class: className = "", variant = "dark" } = Astro.props;
+
+const styles: Record<string, { bg: string; text: string }> = {
+  dark: { bg: "var(--color-brand-950)", text: "rgba(255,255,255,0.9)" },
+  light: { bg: "var(--color-brand-50)", text: "var(--color-brand-700)" },
+};
+
+const s = styles[variant];
+---
+
+<div
+  class:list={["relative flex items-center justify-center overflow-hidden rounded-lg", className]}
+  style={`background-color:${s.bg};`}
+>
+  <span
+    class="relative rounded-full px-4 py-1.5 text-xs font-medium tracking-wide"
+    style={`color:${s.text}; background-color:${variant === "dark" ? "rgba(255,255,255,0.1)" : "rgba(29,29,31,0.06)"};`}
+  >
+    {label}
+  </span>
+</div>
