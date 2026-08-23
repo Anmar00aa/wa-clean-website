@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
-import PhotoPlaceholder from "../components/PhotoPlaceholder.astro";
+import EinsatzgebietMap from "../components/EinsatzgebietMap.astro";
 import Icon from "../components/Icon.astro";
 
 const orte = [
@@ -10,10 +10,12 @@ const orte = [
     badge: "Hauptniederlassung",
     manager: "Wael Alsaad",
     text: "In Wiesbaden liegt unsere Hauptniederlassung. Als hessische Landeshauptstadt bringt die Stadt eine große Bandbreite an Objekten mit sich – von Büro- und Verwaltungsgebäuden über Praxen bis zu gehobenen Wohnanlagen. Wir übernehmen hier sowohl regelmäßige Unterhaltsreinigung als auch einmalige Grundreinigungen.",
+    href: "/gebaeudereinigung-wiesbaden/",
   },
   {
     name: "Mainz",
     text: "In Mainz sind wir vor allem für Unternehmen, Kanzleien und Hausverwaltungen im Einsatz, die Wert auf feste Ansprechpartner und verlässliche Termine legen. Auch Einsätze auf der linksrheinischen Seite sind für uns kein Umweg.",
+    href: "/gebaeudereinigung-mainz/",
   },
   {
     name: "Rüdesheim am Rhein",
@@ -28,6 +30,7 @@ const orte = [
     badge: "Standort Rheingau",
     manager: "Anmar Alemarah",
     text: "In Oestrich-Winkel betreiben wir unseren zweiten Standort mitten im Rheingau. Von hier aus betreuen wir sowohl Gewerbeobjekte als auch Privathaushalte in der Region mit kurzen Anfahrtswegen und flexiblen Terminen.",
+    href: "/gebaeudereinigung-rheingau/",
   },
   {
     name: "Eltville am Rhein",
@@ -57,7 +60,7 @@ const orte = [
           einfach auf Ihren Standort an.
         </p>
       </div>
-      <PhotoPlaceholder class="reveal aspect-[4/3] w-full" label="Karte: Einsatzgebiet Rheingau" variant="dark" />
+      <EinsatzgebietMap class="reveal" />
     </div>
   </section>
 
@@ -80,6 +83,11 @@ const orte = [
             </div>
             <p class="mt-3 text-sm leading-relaxed text-brand-700">{ort.text}</p>
             {ort.manager && <p class="mt-3 text-xs text-brand-600">Ansprechpartner: {ort.manager}</p>}
+            {ort.href && (
+              <a href={ort.href} class="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent-700 hover:text-accent-600">
+                Mehr über {ort.name} <Icon name="chevron-right" class="h-3.5 w-3.5" />
+              </a>
+            )}
           </div>
         ))}
       </div>

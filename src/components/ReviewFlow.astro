@@ -4,11 +4,10 @@
 // der Google-Bewertungslink ist in JEDEM Pfad sichtbar und frei anklickbar,
 // niemals versteckt oder von der Sternezahl abhängig gemacht.
 //
-// HINWEIS zum Versand: Wie beim bestehenden ContactForm.astro ist dieses
-// Formular noch nicht an ein Backend angebunden (action="#"). Für eine
-// statische Astro-Seite eignet sich z. B. Netlify Forms, Formspree oder
-// eine eigene API-Route – dort sollte auch die serverseitige Prüfung des
-// Honeypot-Felds sowie die Foto-Upload-Größe/-Typprüfung erfolgen.
+// Versand läuft über Formspree (site.formEndpoint), Validierung/Spam-Schutz/
+// Erfolgsmeldung teilen sich die Logik mit ContactForm.astro/QuickRequestForm.astro,
+// siehe src/lib/formSubmit.ts. Hinweis: Foto-Anhänge werden von Formspree nur
+// im bezahlten Tarif verarbeitet – im Free-Plan kommt die Mail ggf. ohne Anhang an.
 import { site } from "../config/site";
 
 interface Props {
@@ -66,9 +65,10 @@ const { services } = Astro.props;
 
   <!-- Feedback-Formular: bei 1–3 Sternen sofort sichtbar, bei 4–5 Sternen erst nach Klick -->
   <div class="mt-8" data-feedback-wrap hidden>
-    <form class="card grid gap-5 p-6 sm:p-8" action="#" method="POST" data-feedback-form novalidate>
+    <form class="card grid gap-5 p-6 sm:p-8" action={site.formEndpoint} method="POST" data-feedback-form novalidate>
       <p class="text-sm text-brand-600" data-rating-display></p>
       <input type="hidden" name="sterne" data-rating-field />
+      <input type="hidden" name="_subject" value="Neues Bewertungs-Feedback – wa-clean.de" />
 
       <!-- Honeypot: für Menschen unsichtbar, Bots füllen es oft blind aus -->
       <div class="hidden" aria-hidden="true">
@@ -164,7 +164,7 @@ const { services } = Astro.props;
         </span>
       </label>
 
-      <p class="text-sm text-red-600" data-feedback-error role="alert" hidden></p>
+      <p class="text-sm text-red-600" data-form-error role="alert" hidden></p>
 
       <button type="submit" class="btn-primary w-full sm:w-auto">Feedback absenden</button>
     </form>
@@ -240,6 +240,8 @@ const { services } = Astro.props;
 </style>
 
 <script>
+  import { setupInlineForm } from "../lib/formSubmit";
+
   function setupReviewFlow(root: HTMLElement) {
     const radios = root.querySelectorAll<HTMLInputElement>('[data-star-rating] input[type="radio"]');
     const hint = root.querySelector<HTMLElement>("[data-rating-hint]");
@@ -251,7 +253,6 @@ const { services } = Astro.props;
     const ratingDisplay = root.querySelector<HTMLElement>("[data-rating-display]");
     const form = root.querySelector<HTMLFormElement>("[data-feedback-form]");
     const successBox = root.querySelector<HTMLElement>("[data-feedback-success]");
-    const errorBox = root.querySelector<HTMLElement>("[data-feedback-error]");
     const fotoInput = root.querySelector<HTMLInputElement>("#feedback-foto");
     const fotoHint = root.querySelector<HTMLElement>("[data-foto-hint]");
     if (!radios.length || !form) return;
@@ -313,26 +314,7 @@ const { services } = Astro.props;
       fotoHint.classList.remove("text-red-600");
     });
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      errorBox?.setAttribute("hidden", "");
-
-      // Honeypot: gefüllt bedeutet höchstwahrscheinlich Bot -> still verwerfen
-      const honeypot = form.querySelector<HTMLInputElement>('[name="website"]');
-      if (honeypot?.value) return;
-
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-
-      // HINWEIS: Hier fehlt noch die eigentliche Übertragung an ein Backend
-      // (siehe Kommentar am Kopf dieser Komponente). Bis dahin wird die
-      // Bestätigung ausschließlich clientseitig angezeigt.
-      form.setAttribute("hidden", "");
-      successBox?.removeAttribute("hidden");
-      successBox?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    setupInlineForm(form, successBox);
   }
 
   document.querySelectorAll<HTMLElement>("[data-review-flow]").forEach(setupReviewFlow);

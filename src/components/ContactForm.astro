@@ -1,9 +1,7 @@
 ---
-// HINWEIS: Der Versand ist noch nicht an ein Backend angebunden.
-// Für eine statische Astro-Seite eignet sich z. B. Netlify Forms, Formspree
-// oder eine eigene API-Route. Bis dahin ist "action" ein Platzhalter.
-// Validierung/Spam-Schutz/Erfolgsmeldung teilen sich mit QuickRequestForm.astro
-// dieselbe Logik, siehe src/lib/formSubmit.ts.
+// Versand läuft über Formspree (site.formEndpoint). Validierung/Spam-Schutz/
+// Erfolgsmeldung teilen sich mit QuickRequestForm.astro dieselbe Logik,
+// siehe src/lib/formSubmit.ts.
 import { site } from "../config/site";
 
 interface Props {
@@ -17,7 +15,7 @@ const { services, presetService } = Astro.props;
 <div class="reveal" data-inline-form-wrap>
 <form
   class="card grid gap-5 p-6 sm:p-8"
-  action="#"
+  action={site.formEndpoint}
   method="POST"
   id="angebot-formular"
   data-inline-form
@@ -28,6 +26,7 @@ const { services, presetService } = Astro.props;
     <label for="angebot-website">Bitte freilassen</label>
     <input type="text" id="angebot-website" name="website" tabindex="-1" autocomplete="off" />
   </div>
+  <input type="hidden" name="_subject" value="Neue Anfrage über das Kontaktformular – wa-clean.de" />
 
   <div class="grid gap-5 sm:grid-cols-2">
     <div class="sm:col-span-2">

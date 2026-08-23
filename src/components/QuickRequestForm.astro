@@ -15,12 +15,13 @@ const { services } = Astro.props;
   <p class="text-lg font-semibold text-brand-950">Kostenloses Angebot anfordern</p>
   <p class="mt-1 text-sm text-brand-600">In wenigen Schritten zu Ihrem unverbindlichen Angebot.</p>
 
-  <form class="mt-5 grid gap-3.5" action="#" method="POST" data-inline-form novalidate>
+  <form class="mt-5 grid gap-3.5" action={site.formEndpoint} method="POST" data-inline-form novalidate>
     <!-- Honeypot: für Menschen unsichtbar, Bots füllen es oft blind aus -->
     <div class="hidden" aria-hidden="true">
       <label for="hero-website">Bitte freilassen</label>
       <input type="text" id="hero-website" name="website" tabindex="-1" autocomplete="off" />
     </div>
+    <input type="hidden" name="_subject" value="Neue Quick-Anfrage (Hero) – wa-clean.de" />
 
     <div>
       <label for="hero-name" class="sr-only">Name / Firma</label>

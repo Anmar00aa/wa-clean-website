@@ -1,0 +1,108 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import PhotoPlaceholder from "../../components/PhotoPlaceholder.astro";
+import Icon from "../../components/Icon.astro";
+
+const places = [
+  {
+    name: "Wiesbaden",
+    badge: "Head Office",
+    manager: "Wael Alsaad",
+    text: "Wiesbaden is home to our head office. As the state capital of Hesse, the city brings a wide range of properties – from office and administrative buildings to practices and upscale residential complexes. We handle both regular routine cleaning and one-off deep cleans here.",
+    href: "/en/wiesbaden/",
+  },
+  {
+    name: "Mainz",
+    text: "In Mainz, we mainly work with businesses, law firms and property managers who value a fixed point of contact and reliable scheduling. Crossing the Rhine to the west bank is no detour for us.",
+    href: "/en/mainz/",
+  },
+  {
+    name: "Rüdesheim am Rhein",
+    text: "Rüdesheim thrives on tourism, so a well-kept appearance matters for restaurants, guesthouses and shops. We support businesses here at short notice during busier periods too.",
+  },
+  {
+    name: "Geisenheim",
+    text: "In Geisenheim, we clean for businesses, educational institutions and private households alike. Proximity to Geisenheim University also brings enquiries from the education and research community.",
+  },
+  {
+    name: "Oestrich-Winkel",
+    badge: "Rheingau Location",
+    manager: "Anmar Alemarah",
+    text: "Our second location, right in the heart of the Rheingau, is in Oestrich-Winkel. From here we serve both commercial properties and private households in the region with short travel distances and flexible scheduling.",
+    href: "/en/rheingau/",
+  },
+  {
+    name: "Eltville am Rhein",
+    text: "As the \"City of Roses\" and a wine-growing town, Eltville has many historic buildings and well-kept grounds. Our cleaning takes into account the particular needs of older building fabric as well as modern new builds.",
+  },
+];
+---
+
+<Layout
+  lang="en"
+  title="Service Area"
+  description="Building cleaning in the Rheingau, Wiesbaden, Mainz, Rüdesheim am Rhein, Geisenheim, Oestrich-Winkel and Eltville am Rhein. Regionally rooted, reliably on-site."
+>
+  <Breadcrumbs items={[{ label: "Home", href: "/en/" }, { label: "Service Area", href: "/en/service-area/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:items-center">
+      <div class="reveal">
+        <p class="eyebrow">Service Area</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">At Home in the Rheingau</h1>
+        <p class="mt-6 text-brand-700 leading-relaxed">
+          With our head office in Wiesbaden and a second location in Oestrich-Winkel, we're directly
+          represented in both the Rheingau and the state capital. Thanks to our central location, short
+          travel distances and flexible scheduling are possible, even at short notice.
+        </p>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          We're also happy to take on properties outside the areas listed below, by arrangement. Just get
+          in touch and mention your location.
+        </p>
+      </div>
+      <PhotoPlaceholder class="reveal aspect-[4/3] w-full" label="Map: Rheingau service area" variant="dark" />
+    </div>
+  </section>
+
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <h2 class="reveal text-2xl font-semibold sm:text-3xl">Our Locations at a Glance</h2>
+      <div class="reveal-group mt-8 grid gap-5 sm:grid-cols-2">
+        {places.map((place) => (
+          <div class="reveal-item card p-6">
+            <div class="flex items-center gap-2.5">
+              <span class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-50 text-brand-950">
+                <Icon name="map-pin" class="h-4 w-4" />
+              </span>
+              <h3 class="text-lg font-semibold text-brand-950">{place.name}</h3>
+              {place.badge && (
+                <span class="rounded-full bg-accent-100 px-2.5 py-1 text-xs font-medium text-accent-700">
+                  {place.badge}
+                </span>
+              )}
+            </div>
+            <p class="mt-3 text-sm leading-relaxed text-brand-700">{place.text}</p>
+            {place.manager && <p class="mt-3 text-xs text-brand-600">Point of contact: {place.manager}</p>}
+            {place.href && (
+              <a href={place.href} class="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent-700 hover:text-accent-600">
+                More about {place.name} <Icon name="chevron-right" class="h-3.5 w-3.5" />
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page flex flex-col items-center gap-5 text-center">
+      <h2 class="text-2xl font-semibold sm:text-3xl">Your location isn't listed?</h2>
+      <p class="max-w-xl text-brand-700">
+        Get in touch, no obligation – we're happy to check whether we can also take on your property outside
+        the Rheingau.
+      </p>
+      <a href="/en/contact/" class="btn-primary">Request a Free Quote</a>
+    </div>
+  </section>
+</Layout>

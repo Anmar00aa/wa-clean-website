@@ -1,0 +1,57 @@
+---
+// Schwebende Kontakt-Buttons am rechten Bildschirmrand – nur Desktop
+// (auf Mobile übernimmt die vorhandene MobileCtaBar dieselbe Funktion,
+// bewusst nicht doppelt anzeigen). Nutzt ausschließlich bereits im
+// Projekt verifizierte Kontaktdaten aus site.ts.
+import { site, getWhatsappHref } from "../config/site";
+import Icon from "./Icon.astro";
+
+interface Props {
+  lang?: "de" | "en";
+}
+
+const { lang = "de" } = Astro.props;
+
+const whatsappHref = getWhatsappHref(lang);
+const whatsappAriaLabel = lang === "en" ? "Start WhatsApp chat" : "WhatsApp-Chat starten";
+---
+
+<div class="fixed bottom-24 right-5 z-40 hidden flex-col gap-3 lg:flex" data-track="floating-contact">
+  <a
+    href={whatsappHref}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="group relative flex h-12 w-12 items-center justify-center rounded-full bg-brand-950 text-white shadow-lg shadow-brand-950/20 transition-transform hover:scale-105"
+    aria-label={whatsappAriaLabel}
+    data-track="whatsapp-click"
+  >
+    <Icon name="whatsapp" class="h-5 w-5" />
+    <span class="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-md bg-brand-950 px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100">
+      WhatsApp
+    </span>
+  </a>
+
+  <a
+    href={site.phoneHref}
+    class="group relative flex h-12 w-12 items-center justify-center rounded-full bg-accent-600 text-white shadow-lg shadow-accent-600/25 transition-transform hover:scale-105"
+    aria-label="Jetzt anrufen"
+    data-track="phone-click"
+  >
+    <Icon name="phone" class="h-5 w-5" />
+    <span class="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-md bg-brand-950 px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100">
+      Jetzt anrufen
+    </span>
+  </a>
+
+  <a
+    href={`mailto:${site.email}`}
+    class="group relative flex h-12 w-12 items-center justify-center rounded-full bg-white text-brand-950 shadow-lg ring-1 ring-inset ring-brand-100 transition-transform hover:scale-105"
+    aria-label="E-Mail schreiben"
+    data-track="email-click"
+  >
+    <Icon name="mail" class="h-5 w-5" />
+    <span class="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-md bg-brand-950 px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-md transition-opacity group-hover:opacity-100">
+      E-Mail
+    </span>
+  </a>
+</div>

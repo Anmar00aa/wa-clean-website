@@ -43,20 +43,42 @@ export const site = {
   // Feedback verwendet – bewusst OHNE Review-Gating.
   googleReviewLink: "https://g.page/r/[PLATZHALTER]/review",
 
-  // [PLATZHALTER] – im gesamten Projekt ist aktuell KEINE WhatsApp-Nummer
-  // hinterlegt. Bewusst nicht geraten (z. B. keine der Mobilnummern
-  // wiederverwendet) – bitte die echte WhatsApp-Geschäftsnummer eintragen.
-  // Format ohne "+" und ohne Leerzeichen, z. B. "4917600000000".
-  whatsappNumber: "[PLATZHALTER]",
+  // Zentrale WhatsApp-Geschäftsnummer im internationalen Format ohne "+"
+  // und ohne Leerzeichen. Einzige Stelle im Projekt, an der diese Nummer
+  // gepflegt wird – alle WhatsApp-Buttons beziehen sie ausschließlich von
+  // hier (über whatsappHref bzw. getWhatsappHref()).
+  whatsappNumber: "4917623966869",
   get whatsappHref() {
     return `https://wa.me/${this.whatsappNumber}`;
   },
+
+  // Vorgefertigte, professionelle WhatsApp-Nachricht je Sprache. Wird von
+  // getWhatsappHref() automatisch URL-encodiert an den wa.me-Link angehängt,
+  // sodass der Chat direkt mit vorausgefülltem Text startet.
+  whatsappMessageDe:
+    "Hallo WA-Clean, ich interessiere mich für Ihre Reinigungsleistungen und möchte gerne ein unverbindliches Angebot erhalten.",
+  whatsappMessageEn:
+    "Hello WA-Clean, I am interested in your cleaning services and would like to request a non-binding quote.",
 
   // Zentrale Ziel-Route für alle "Anfrage"/"Angebot anfordern"-CTAs
   // (Mobile Bottom Bar, Header, o. ä.), die nicht direkt auf ein
   // eingebettetes Formular verlinken.
   requestPath: "/kontakt/",
+
+  // Formspree-Endpoint für den echten Versand aller Website-Formulare
+  // (Kontakt, Hero-Quick-Anfrage, Bewertungs-Feedback, Bewerbung).
+  // Zielpostfach ist bei Formspree auf info@wa-clean.de eingestellt.
+  formEndpoint: "https://formspree.io/f/meajnvvd",
 } as const;
+
+// Liefert den fertigen WhatsApp-Link inkl. sprachabhängiger, vorausgefüllter
+// Nachricht. Zentrale Stelle für ALLE WhatsApp-Buttons der Website (Desktop
+// Floating-Button, Mobile CTA-Leiste, Standort-Landingpages DE + EN) – so
+// wird die Nummer nirgends im Code dupliziert.
+export function getWhatsappHref(lang: "de" | "en" = "de"): string {
+  const message = lang === "en" ? site.whatsappMessageEn : site.whatsappMessageDe;
+  return `${site.whatsappHref}?text=${encodeURIComponent(message)}`;
+}
 
 // Grobe Regionsauswahl fürs Quick-Anfrageformular im Hero – bewusst kürzer
 // als die vollständige regions-Liste unten (Startseite/Hero-Kontext).
@@ -149,3 +171,55 @@ export const footerNav = {
     { label: "Datenschutz", href: "/datenschutz/" },
   ],
 };
+
+// ---- Englische Version (/en/) ------------------------------------------
+
+export const mainNavEn = [
+  { label: "Home", href: "/en/" },
+  { label: "Services", href: "/en/services/" },
+  { label: "About Us", href: "/en/about-us/" },
+  { label: "Service Area", href: "/en/service-area/" },
+  { label: "References", href: "/en/references/" },
+  { label: "FAQ", href: "/en/faq/" },
+  { label: "Contact", href: "/en/contact/" },
+] as const;
+
+export const footerNavEn = {
+  company: [
+    { label: "About Us", href: "/en/about-us/" },
+    { label: "References", href: "/en/references/" },
+    { label: "FAQ", href: "/en/faq/" },
+    { label: "Contact", href: "/en/contact/" },
+  ],
+  services: [
+    { label: "All Services", href: "/en/services/" },
+    { label: "Routine Cleaning", href: "/en/services/unterhaltsreinigung/" },
+    { label: "Office Cleaning", href: "/en/services/bueroreinigung/" },
+    { label: "Window & Glass Cleaning", href: "/en/services/fenster-glasreinigung/" },
+  ],
+  legal: [
+    { label: "Imprint (DE)", href: "/impressum/" },
+    { label: "Privacy Policy (DE)", href: "/datenschutz/" },
+  ],
+};
+
+// Zentrale DE<->EN-Seitenzuordnung für hreflang-Tags und den Sprachumschalter
+// im Header. Wird in Layout.astro anhand des aktuellen Pfads nachgeschlagen –
+// einzelne Leistungsseiten werden separat über den (identischen) Slug in
+// den Collections "leistungen"/"leistungenEn" zugeordnet, siehe [slug].astro.
+export const pageTranslationsDeToEn: Record<string, string> = {
+  "/": "/en/",
+  "/leistungen/": "/en/services/",
+  "/ueber-uns/": "/en/about-us/",
+  "/einsatzgebiet/": "/en/service-area/",
+  "/referenzen/": "/en/references/",
+  "/faq/": "/en/faq/",
+  "/kontakt/": "/en/contact/",
+  "/gebaeudereinigung-wiesbaden/": "/en/wiesbaden/",
+  "/gebaeudereinigung-rheingau/": "/en/rheingau/",
+  "/gebaeudereinigung-mainz/": "/en/mainz/",
+};
+
+export const pageTranslationsEnToDe: Record<string, string> = Object.fromEntries(
+  Object.entries(pageTranslationsDeToEn).map(([de, en]) => [en, de])
+);

@@ -1,0 +1,231 @@
+---
+// Englische Version von QuoteWizard.astro – identische Feldnamen für
+// konsistente Formspree-Auswertung, übersetzte Texte. Gleiche
+// Versand-Logik (src/lib/formSubmit.ts).
+import { site, contactRegions } from "../config/site";
+
+interface Props {
+  services: string[];
+}
+
+const { services } = Astro.props;
+
+const objectTypes = ["Office", "Private household", "Practice", "Hotel", "Restaurant", "Stairwell", "Childcare / School", "Other"];
+const sizes = ["Up to 50 m²", "50–150 m²", "150–500 m²", "Over 500 m²", "Not sure yet"];
+
+const TOTAL_STEPS = 7;
+---
+
+<div class="card overflow-hidden p-0" data-wizard-en>
+  <div class="h-1.5 w-full bg-brand-50">
+    <div class="h-full bg-accent-600 transition-all duration-300" style="width: 14.28%;" data-wizard-progress></div>
+  </div>
+
+  <form class="p-6 sm:p-8" action={site.formEndpoint} method="POST" data-inline-form novalidate>
+    <div class="hidden" aria-hidden="true">
+      <label for="wizard-en-website">Leave this field empty</label>
+      <input type="text" id="wizard-en-website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    <input type="hidden" name="_subject" value="New enquiry via the 60-second quote assistant (EN) – wa-clean.de" />
+
+    <p class="mb-6 text-xs font-medium uppercase tracking-wide text-brand-500" data-wizard-step-label>Step 1 of {TOTAL_STEPS}</p>
+
+    <fieldset data-wizard-panel="1">
+      <legend class="text-lg font-semibold text-brand-950">What would you like cleaned?</legend>
+      <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4" data-wizard-options>
+        {objectTypes.map((o, i) => (
+          <label class="wizard-option flex cursor-pointer items-center justify-center rounded-lg border border-brand-100 bg-brand-50 px-3 py-4 text-center text-sm font-medium text-brand-900 transition-colors hover:border-accent-600">
+            <input type="radio" name="objektart" value={o} required={i === 0} class="sr-only" />
+            {o}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset data-wizard-panel="2" hidden>
+      <legend class="text-lg font-semibold text-brand-950">Which service do you need?</legend>
+      <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3" data-wizard-options>
+        {services.map((s, i) => (
+          <label class="wizard-option flex cursor-pointer items-center justify-center rounded-lg border border-brand-100 bg-brand-50 px-3 py-4 text-center text-sm font-medium text-brand-900 transition-colors hover:border-accent-600">
+            <input type="radio" name="leistung" value={s} required={i === 0} class="sr-only" />
+            {s}
+          </label>
+        ))}
+        <label class="wizard-option flex cursor-pointer items-center justify-center rounded-lg border border-brand-100 bg-brand-50 px-3 py-4 text-center text-sm font-medium text-brand-900 transition-colors hover:border-accent-600">
+          <input type="radio" name="leistung" value="Other request" class="sr-only" />
+          Other request
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset data-wizard-panel="3" hidden>
+      <legend class="text-lg font-semibold text-brand-950">Where is the property located?</legend>
+      <div class="mt-5 grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for="wizard-en-region" class="mb-1.5 block text-sm font-medium text-brand-900">Region</label>
+          <select id="wizard-en-region" name="region" class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600">
+            {contactRegions.map((r) => <option value={r}>{r}</option>)}
+          </select>
+        </div>
+        <div>
+          <label for="wizard-en-ort" class="mb-1.5 block text-sm font-medium text-brand-900">Town / district *</label>
+          <input id="wizard-en-ort" name="ort" type="text" required placeholder="e.g. Wiesbaden-Biebrich" class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600" />
+        </div>
+      </div>
+      <button type="button" class="btn-primary mt-6" data-wizard-next>Next</button>
+    </fieldset>
+
+    <fieldset data-wizard-panel="4" hidden>
+      <legend class="text-lg font-semibold text-brand-950">Approximate size of the property</legend>
+      <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3" data-wizard-options>
+        {sizes.map((g, i) => (
+          <label class="wizard-option flex cursor-pointer items-center justify-center rounded-lg border border-brand-100 bg-brand-50 px-3 py-4 text-center text-sm font-medium text-brand-900 transition-colors hover:border-accent-600">
+            <input type="radio" name="groesse" value={g} required={i === 0} class="sr-only" />
+            {g}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset data-wizard-panel="5" hidden>
+      <legend class="text-lg font-semibold text-brand-950">One-off or recurring?</legend>
+      <div class="mt-5 grid grid-cols-2 gap-3" data-wizard-options>
+        {["One-off", "Recurring"].map((h, i) => (
+          <label class="wizard-option flex cursor-pointer items-center justify-center rounded-lg border border-brand-100 bg-brand-50 px-3 py-4 text-center text-sm font-medium text-brand-900 transition-colors hover:border-accent-600">
+            <input type="radio" name="haeufigkeit" value={h} required={i === 0} class="sr-only" />
+            {h}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset data-wizard-panel="6" hidden>
+      <legend class="text-lg font-semibold text-brand-950">Preferred start date</legend>
+      <div class="mt-5">
+        <input
+          id="wizard-en-termin"
+          name="starttermin"
+          type="text"
+          placeholder="e.g. as soon as possible or a specific date"
+          class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+        />
+      </div>
+      <button type="button" class="btn-primary mt-6" data-wizard-next>Next</button>
+    </fieldset>
+
+    <fieldset data-wizard-panel="7" hidden>
+      <legend class="text-lg font-semibold text-brand-950">Your contact details</legend>
+      <div class="mt-5 grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for="wizard-en-name" class="mb-1.5 block text-sm font-medium text-brand-900">Name / Company *</label>
+          <input id="wizard-en-name" name="name" type="text" required autocomplete="name" class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600" />
+        </div>
+        <div>
+          <label for="wizard-en-telefon" class="mb-1.5 block text-sm font-medium text-brand-900">Phone number *</label>
+          <input id="wizard-en-telefon" name="telefon" type="tel" required autocomplete="tel" class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600" />
+        </div>
+        <div class="sm:col-span-2">
+          <label for="wizard-en-email" class="mb-1.5 block text-sm font-medium text-brand-900">Email *</label>
+          <input id="wizard-en-email" name="email" type="email" required autocomplete="email" class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600" />
+        </div>
+      </div>
+      <label class="mt-4 flex items-start gap-2.5 text-xs text-brand-900/70">
+        <input type="checkbox" name="datenschutz" required class="mt-0.5 h-3.5 w-3.5 rounded border-brand-950/20 text-accent-600 focus:ring-accent-600" />
+        <span>I agree to the <a href="/datenschutz/" class="underline hover:text-accent-600">privacy policy</a>. *</span>
+      </label>
+      <button type="submit" class="btn-primary mt-6 w-full sm:w-auto">Request a free, no-obligation quote</button>
+    </fieldset>
+
+    <button type="button" class="mt-6 hidden text-sm font-medium text-brand-600 hover:text-accent-600" data-wizard-back>
+      ← Back
+    </button>
+  </form>
+
+  <div class="p-8 text-center" data-inline-form-success hidden>
+    <p class="text-lg font-semibold text-brand-950">Thank you for your enquiry!</p>
+    <p class="mt-2 text-sm text-brand-700">We'll get back to you as soon as possible with a no-obligation quote.</p>
+  </div>
+</div>
+
+<style>
+  .wizard-option:has(input:checked) {
+    border-color: var(--color-accent-600);
+    background-color: var(--color-accent-100);
+    color: var(--color-accent-700);
+  }
+  .wizard-option input:focus-visible {
+    outline: none;
+  }
+  .wizard-option:has(input:focus-visible) {
+    outline: 2px solid var(--color-accent-600);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  import { setupInlineForm } from "../lib/formSubmit";
+
+  const TOTAL_STEPS = 7;
+
+  function setupWizard(root: HTMLElement) {
+    const form = root.querySelector<HTMLFormElement>("[data-inline-form]");
+    const successBox = root.querySelector<HTMLElement>("[data-inline-form-success]");
+    if (form) setupInlineForm(form, successBox);
+
+    const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-wizard-panel]"));
+    const progress = root.querySelector<HTMLElement>("[data-wizard-progress]");
+    const stepLabel = root.querySelector<HTMLElement>("[data-wizard-step-label]");
+    const backBtn = root.querySelector<HTMLButtonElement>("[data-wizard-back]");
+    let current = 1;
+
+    function showStep(n: number) {
+      current = n;
+      panels.forEach((p) => {
+        const step = Number(p.dataset.wizardPanel);
+        if (step === n) p.removeAttribute("hidden");
+        else p.setAttribute("hidden", "");
+      });
+      if (progress) progress.style.width = `${(n / TOTAL_STEPS) * 100}%`;
+      if (stepLabel) stepLabel.textContent = `Step ${n} of ${TOTAL_STEPS}`;
+      if (backBtn) {
+        if (n > 1) backBtn.classList.remove("hidden");
+        else backBtn.classList.add("hidden");
+      }
+    }
+
+    function currentPanel() {
+      return panels.find((p) => Number(p.dataset.wizardPanel) === current);
+    }
+
+    function goNext() {
+      const panel = currentPanel();
+      if (!panel) return;
+      const invalid = panel.querySelector<HTMLInputElement>(":invalid");
+      if (invalid) {
+        invalid.reportValidity();
+        return;
+      }
+      if (current < TOTAL_STEPS) showStep(current + 1);
+    }
+
+    root.querySelectorAll<HTMLElement>("[data-wizard-options]").forEach((group) => {
+      group.querySelectorAll<HTMLInputElement>('input[type="radio"]').forEach((radio) => {
+        radio.addEventListener("change", () => {
+          window.setTimeout(goNext, 150);
+        });
+      });
+    });
+
+    root.querySelectorAll<HTMLButtonElement>("[data-wizard-next]").forEach((btn) => {
+      btn.addEventListener("click", goNext);
+    });
+
+    backBtn?.addEventListener("click", () => {
+      if (current > 1) showStep(current - 1);
+    });
+
+    showStep(1);
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-wizard-en]").forEach(setupWizard);
+</script>

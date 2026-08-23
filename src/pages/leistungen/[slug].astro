@@ -27,7 +27,7 @@ const otherServices = allServices
   .slice(0, 3);
 ---
 
-<Layout title={service.data.title} description={service.data.metaDescription}>
+<Layout title={service.data.title} description={service.data.metaDescription} alternateHref={`/en/services/${service.id}/`}>
   <Breadcrumbs
     items={[
       { label: "Startseite", href: "/" },

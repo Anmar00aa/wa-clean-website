@@ -1,0 +1,101 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import BeforeAfter from "../../components/BeforeAfter.astro";
+import LogoSlideshow from "../../components/LogoSlideshow.astro";
+
+const pairs = [
+  { title: "Bathroom Cleaning – Washbasin", before: "/work/waschbecken-einzeln-vorher.jpg", after: "/work/waschbecken-einzeln-nachher.jpg", category: "Office & Commercial" },
+  { title: "Bathroom Cleaning – Row of Basins", before: "/work/waschbeckenreihe-vorher.jpg", after: "/work/waschbeckenreihe-nachher.jpg", category: "Office & Commercial" },
+  { title: "Window Cleaning – Cobwebs Removed", before: "/work/fenster-spinnweben-vorher.jpg", after: "/work/fenster-spinnweben-nachher.jpg", category: "Window Cleaning" },
+  { title: "Window Cleaning – Restaurant", before: "/work/restaurant-fenster-vorher.jpg", after: "/work/restaurant-fenster-nachher.jpg", category: "Hotel & Gastronomy" },
+  { title: "Garden Maintenance – Hedge Trimming & Paths", before: "/work/hecke-vorher.jpg", after: "/work/hecke-nachher.jpg", category: "Garden & Outdoor Areas" },
+];
+
+const categories = [...new Set(pairs.map((p) => p.category))];
+
+const insights = [
+  { src: "/work/action-glasdach-spiderman.jpg", alt: "Glass roof cleaning from the inside" },
+  { src: "/work/action-fassade-fenster.jpg", alt: "Facade and window cleaning" },
+  { src: "/work/action-dach-hochdruck.jpg", alt: "Gutter cleaning with a pressure washer" },
+  { src: "/work/action-gardine-fenster.jpg", alt: "Indoor window cleaning" },
+  { src: "/work/action-flur-wischen.jpg", alt: "Routine cleaning in a hallway" },
+  { src: "/work/action-eingang-staubsaugen.jpg", alt: "Entrance area and stairwell cleaning" },
+];
+---
+
+<Layout
+  lang="en"
+  title="References"
+  description="Real before-and-after results and insights into completed cleaning projects in the Rheingau and in Wiesbaden."
+>
+  <Breadcrumbs items={[{ label: "Home", href: "/en/" }, { label: "References", href: "/en/references/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal max-w-2xl">
+        <p class="eyebrow">References</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Results From Our Projects</h1>
+        <p class="mt-4 text-lg text-brand-700">
+          Real before-and-after photos from completed jobs – unfiltered, exactly as our customers receive
+          the result.
+        </p>
+      </div>
+
+      <div class="mt-12 space-y-12">
+        {categories.map((cat) => (
+          <div>
+            <h2 class="reveal text-xl font-semibold text-brand-950">{cat}</h2>
+            <div class="reveal-group mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {pairs.filter((p) => p.category === cat).map((p) => (
+                <BeforeAfter title={p.title} before={p.before} after={p.after} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p class="reveal mt-10 text-sm text-brand-600">
+        We continually add further references here, e.g. from stairwells, deep and post-construction
+        cleaning, and public institutions.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Insights</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">How We Work</h2>
+      </div>
+      <div class="reveal-group mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {insights.map((img) => (
+          <div class="reveal-item aspect-[4/3] overflow-hidden rounded-lg">
+            <img src={img.src} alt={img.alt} class="h-full w-full object-cover" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Trust</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Customers and Partners Who Rely on Us</h2>
+      </div>
+      <div class="mt-10">
+        <LogoSlideshow />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-brand-950 py-14 sm:py-16">
+    <div class="container-page flex flex-col items-center gap-5 text-center">
+      <h2 class="text-2xl font-semibold text-white sm:text-3xl">See for Yourself</h2>
+      <p class="max-w-xl text-brand-100/80">
+        We're happy to show you how we work in a personal conversation. Request a no-obligation quote.
+      </p>
+      <a href="/en/contact/" class="btn-primary">Request a Free Quote</a>
+    </div>
+  </section>
+</Layout>

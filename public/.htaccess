@@ -1,0 +1,36 @@
+# Weiterleitungen von der alten WordPress-Website (wa-clean.de) auf die
+# neue Astro-Website. Basiert auf der öffentlich abgerufenen alten
+# WP-Sitemap. Nur echte Inhaltsseiten werden weitergeleitet – reine
+# Theme-Demo-/Testseiten ohne echtes neues Äquivalent erhalten 410 (Gone)
+# statt einer irreführenden Weiterleitung auf die Startseite.
+
+# Alte Rechtstexte/Leistungsseiten -> passende neue Seite (301)
+RedirectMatch 301 ^/datenschutzerklaerung/?$ /datenschutz/
+RedirectMatch 301 ^/leistungen/garten-und-gruenpflege/?$ /leistungen/gartenpflege/
+RedirectMatch 301 ^/leistungen/reinigung-von-universitaeten-bueros-und-arztpraxen/?$ /leistungen/bueroreinigung/
+RedirectMatch 301 ^/leistungen/treppenhaus-und-flurreinigung/?$ /leistungen/treppenhausreinigung/
+RedirectMatch 301 ^/leistungen/wohnungsreinigung-nach-bauarbeiten/?$ /leistungen/bauendreinigung/
+RedirectMatch 301 ^/leistungen/wohnungsreinigung-vor-und-nach-dem-umzug/?$ /leistungen/grundreinigung/
+RedirectMatch 301 ^/leistungen/reinigung-von-kindergaerten/?$ /leistungen/kita-schulreinigung/
+# Kein 1:1-Nachfolger vorhanden – auf die Leistungsübersicht verweisen,
+# bis ggf. eine eigene Seite für Alten-/Pflegeheimreinigung entsteht.
+RedirectMatch 301 ^/leistungen/reinigung-von-alten-und-pflegeheimen/?$ /leistungen/
+RedirectMatch 301 ^/leistungen/winterdienst-schnee-und-eisbeseitigung/?$ /leistungen/winterdienst/
+
+# Alte Demo-Portfolio-/Team-Einträge -> thematisch passende neue Seite
+RedirectMatch 301 ^/portfolio(/.*)?$ /referenzen/
+RedirectMatch 301 ^/portfolio-category(/.*)?$ /referenzen/
+RedirectMatch 301 ^/team-member(/.*)?$ /ueber-uns/
+
+# Reine Theme-Demo-/Test-/Archivseiten ohne echten Inhalt: 410 Gone
+RedirectMatch 410 ^/homepage-0[1-4]/?$
+RedirectMatch 410 ^/sortable-.*$
+RedirectMatch 410 ^/element/?$
+RedirectMatch 410 ^/amen/?$
+RedirectMatch 410 ^/blog/?$
+RedirectMatch 410 ^/our-team/?$
+RedirectMatch 410 ^/our-history/?$
+RedirectMatch 410 ^/test-.*$
+RedirectMatch 410 ^/author/.*$
+RedirectMatch 410 ^/tag/.*$
+RedirectMatch 410 ^/category/.*$

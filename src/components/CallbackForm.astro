@@ -1,0 +1,71 @@
+---
+// Kompaktes Rückruf-Formular – bewusst auf das Nötigste beschränkt.
+import { site } from "../config/site";
+---
+
+<div class="card p-6 sm:p-8" data-inline-form-wrap>
+  <form class="grid gap-4" action={site.formEndpoint} method="POST" data-inline-form novalidate>
+    <div class="hidden" aria-hidden="true">
+      <label for="rueckruf-website">Bitte freilassen</label>
+      <input type="text" id="rueckruf-website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    <input type="hidden" name="_subject" value="Neue Rückruf-Anfrage – wa-clean.de" />
+
+    <div>
+      <label for="rueckruf-name" class="mb-1.5 block text-sm font-medium text-brand-900">Name *</label>
+      <input
+        type="text"
+        id="rueckruf-name"
+        name="name"
+        required
+        autocomplete="name"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600"
+      />
+    </div>
+    <div>
+      <label for="rueckruf-telefon" class="mb-1.5 block text-sm font-medium text-brand-900">Telefonnummer *</label>
+      <input
+        type="tel"
+        id="rueckruf-telefon"
+        name="telefon"
+        required
+        autocomplete="tel"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600"
+      />
+    </div>
+    <div>
+      <label for="rueckruf-zeit" class="mb-1.5 block text-sm font-medium text-brand-900">Bevorzugte Rückrufzeit</label>
+      <select
+        id="rueckruf-zeit"
+        name="rueckrufzeit"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-3 text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600"
+      >
+        <option value="">Egal / so schnell wie möglich</option>
+        <option value="Vormittags">Vormittags</option>
+        <option value="Nachmittags">Nachmittags</option>
+        <option value="Abends">Abends</option>
+      </select>
+    </div>
+
+    <label class="flex items-start gap-2.5 text-xs text-brand-900/70">
+      <input type="checkbox" name="datenschutz" required class="mt-0.5 h-3.5 w-3.5 rounded border-brand-950/20 text-accent-600 focus:ring-accent-600" />
+      <span>Ich stimme der <a href="/datenschutz/" class="underline hover:text-accent-600">Datenschutzerklärung</a> zu. *</span>
+    </label>
+
+    <button type="submit" class="btn-primary w-full">Kostenlosen Rückruf anfordern</button>
+  </form>
+
+  <div class="p-2 text-center" data-inline-form-success hidden>
+    <p class="text-base font-semibold text-brand-950">Vielen Dank!</p>
+    <p class="mt-1.5 text-sm text-brand-700">Wir rufen Sie zur gewünschten Zeit gerne zurück.</p>
+  </div>
+</div>
+
+<script>
+  import { setupInlineForm } from "../lib/formSubmit";
+  document.querySelectorAll<HTMLElement>("[data-inline-form-wrap]").forEach((wrap) => {
+    const form = wrap.querySelector<HTMLFormElement>("[data-inline-form]");
+    const successBox = wrap.querySelector<HTMLElement>("[data-inline-form-success]");
+    if (form) setupInlineForm(form, successBox);
+  });
+</script>

@@ -9,28 +9,35 @@ const paare = [
     titel: "Sanitärreinigung – Waschbecken",
     before: "/work/waschbecken-einzeln-vorher.jpg",
     after: "/work/waschbecken-einzeln-nachher.jpg",
-  },
-  {
-    titel: "Fensterreinigung – Spinnweben entfernt",
-    before: "/work/fenster-spinnweben-vorher.jpg",
-    after: "/work/fenster-spinnweben-nachher.jpg",
+    kategorie: "Büro & Gewerbe",
   },
   {
     titel: "Sanitärreinigung – Waschbeckenreihe",
     before: "/work/waschbeckenreihe-vorher.jpg",
     after: "/work/waschbeckenreihe-nachher.jpg",
+    kategorie: "Büro & Gewerbe",
   },
   {
-    titel: "Gartenpflege – Heckenschnitt & Wege",
-    before: "/work/hecke-vorher.jpg",
-    after: "/work/hecke-nachher.jpg",
+    titel: "Fensterreinigung – Spinnweben entfernt",
+    before: "/work/fenster-spinnweben-vorher.jpg",
+    after: "/work/fenster-spinnweben-nachher.jpg",
+    kategorie: "Fensterreinigung",
   },
   {
     titel: "Fensterreinigung – Gastronomie",
     before: "/work/restaurant-fenster-vorher.jpg",
     after: "/work/restaurant-fenster-nachher.jpg",
+    kategorie: "Hotel & Gastronomie",
+  },
+  {
+    titel: "Gartenpflege – Heckenschnitt & Wege",
+    before: "/work/hecke-vorher.jpg",
+    after: "/work/hecke-nachher.jpg",
+    kategorie: "Garten & Außenanlagen",
   },
 ];
+
+const kategorien = [...new Set(paare.map((p) => p.kategorie))];
 
 const einblicke = [
   { src: "/work/action-glasdach-spiderman.jpg", alt: "Glasdachreinigung von innen" },
@@ -59,11 +66,22 @@ const einblicke = [
         </p>
       </div>
 
-      <div class="reveal-group mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {paare.map((p) => (
-          <BeforeAfter title={p.titel} before={p.before} after={p.after} />
+      <div class="mt-12 space-y-12">
+        {kategorien.map((kat) => (
+          <div>
+            <h2 class="reveal text-xl font-semibold text-brand-950">{kat}</h2>
+            <div class="reveal-group mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {paare.filter((p) => p.kategorie === kat).map((p) => (
+                <BeforeAfter title={p.titel} before={p.before} after={p.after} />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
+      <p class="reveal mt-10 text-sm text-brand-600">
+        Weitere Referenzen, z. B. aus Treppenhäusern, Grund- und Bauendreinigung sowie öffentlichen
+        Einrichtungen, ergänzen wir hier fortlaufend.
+      </p>
     </div>
   </section>
 

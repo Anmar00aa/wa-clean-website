@@ -3,8 +3,15 @@
 // WhatsApp | Anfrage). Schwarzer Hintergrund (Carbon-Ton der Palette),
 // weiße Line-Icons, keine Emojis. "Anrufen" öffnet eine kompakte Auswahl
 // mit beiden Standorten (Festnetz + Mobil), alle Nummern als tel:-Links.
-import { site, locations } from "../config/site";
+import { site, locations, getWhatsappHref } from "../config/site";
 import Icon from "./Icon.astro";
+
+interface Props {
+  lang?: "de" | "en";
+}
+
+const { lang = "de" } = Astro.props;
+const whatsappHref = getWhatsappHref(lang);
 ---
 
 <div
@@ -55,7 +62,7 @@ import Icon from "./Icon.astro";
   </a>
 
   <a
-    href={site.whatsappHref}
+    href={whatsappHref}
     target="_blank"
     rel="noopener noreferrer"
     class="flex flex-1 flex-col items-center justify-center gap-1 border-l border-white/10 py-3 text-[11px] font-medium"

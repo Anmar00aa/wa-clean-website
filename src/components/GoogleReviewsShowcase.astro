@@ -1,0 +1,60 @@
+---
+// "Das sagen unsere Kunden" – technisch/optisch vorbereitet, aber
+// bewusst OHNE erfundene Bewertungen/Sterne/Namen. Sobald echte
+// Google-Bewertungen (z. B. über die Google Places API oder ein
+// Bewertungs-Widget) angebunden werden, ersetzt das die Platzhalter-Karte
+// unten durch echte Einträge.
+import { site } from "../config/site";
+
+interface Props {
+  lang?: "de" | "en";
+}
+
+const { lang = "de" } = Astro.props;
+
+const t = lang === "en"
+  ? {
+      eyebrow: "Testimonials",
+      heading: "What our customers say",
+      text: "Real reviews from our customers on Google.",
+      pending: "Our genuine Google reviews will be displayed here shortly.",
+      cta: "See reviews on Google",
+    }
+  : {
+      eyebrow: "Kundenstimmen",
+      heading: "Das sagen unsere Kunden",
+      text: "Echte Bewertungen unserer Kundinnen und Kunden auf Google.",
+      pending: "Unsere echten Google-Bewertungen werden hier in Kürze angezeigt.",
+      cta: "Bewertungen auf Google ansehen",
+    };
+---
+
+<section class="py-16 sm:py-20 lg:py-24">
+  <div class="container-page">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">{t.heading}</h2>
+      <p class="mt-4 text-brand-700">
+        {t.text}
+      </p>
+    </div>
+
+    <div class="reveal mx-auto mt-10 max-w-xl">
+      <div class="card flex flex-col items-center gap-3 p-8 text-center">
+        <div class="flex gap-1 text-brand-100" aria-hidden="true">
+          {Array.from({ length: 5 }).map(() => (
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+              <path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7-5.4-4.7 7.1-.7L12 2.5Z" />
+            </svg>
+          ))}
+        </div>
+        <p class="text-sm text-brand-600">
+          {t.pending}
+        </p>
+        <a href={site.googleReviewLink} target="_blank" rel="noopener noreferrer" class="btn-secondary mt-1">
+          {t.cta}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

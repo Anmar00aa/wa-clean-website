@@ -1,0 +1,137 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import Icon from "../../components/Icon.astro";
+import { locations, getWhatsappHref } from "../../config/site";
+
+const whatsappHref = getWhatsappHref("en");
+
+const wiesbaden = locations[0];
+
+const keyServices = [
+  { title: "Office Cleaning", href: "/en/services/bueroreinigung/", text: "For offices, law firms and administrative buildings in Mainz." },
+  { title: "Routine Cleaning", href: "/en/services/unterhaltsreinigung/", text: "Regular cleaning for commercial properties and property managers." },
+  { title: "Practice Cleaning", href: "/en/services/bueroreinigung/", text: "Hygienic cleaning for medical practices and healthcare facilities." },
+  { title: "Window & Glass Cleaning", href: "/en/services/fenster-glasreinigung/", text: "Streak-free windows for office and commercial buildings." },
+];
+
+const faq = [
+  { question: "Is WA-Clean active in Mainz too?", answer: "Yes. Mainz is part of our service area. We serve businesses, property managers and private clients there from our head office in Wiesbaden." },
+  { question: "Do you have your own branch in Mainz?", answer: `No. Our head office is in Wiesbaden (${wiesbaden.street}, ${wiesbaden.zip} ${wiesbaden.city}). Being right next door to Mainz means we can reach properties there with short travel distances and flexible scheduling.` },
+  { question: "Do you charge travel costs for properties in Mainz?", answer: "For recurring contracts within a 30 km radius of our Wiesbaden or Oestrich-Winkel locations, we don't charge additional travel costs – large parts of Mainz fall within this radius. We're happy to clarify the details individually." },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
+---
+
+<Layout
+  lang="en"
+  title="Building Cleaning Mainz"
+  description="Building cleaning in Mainz: WA-Clean serves offices, practices and commercial properties in the Mainz area from our nearby head office in Wiesbaden. Free quote."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+
+  <Breadcrumbs items={[{ label: "Home", href: "/en/" }, { label: "Building Cleaning Mainz", href: "/en/mainz/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div class="reveal">
+        <p class="eyebrow">Service Area: Mainz</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Building Cleaning in the Mainz Area</h1>
+        <p class="mt-6 text-brand-700 leading-relaxed">
+          Mainz is just a few minutes' drive from our head office in Wiesbaden – the close neighbourhood of
+          these two state capitals on the Rhine gives us short travel distances and flexible scheduling for
+          properties in Mainz and the surrounding area too.
+        </p>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          We serve offices, practices, property managers and commercial properties in the Mainz area – from
+          regular routine cleaning to a one-off deep clean.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href="/en/contact/" class="btn-primary">Request a Free Quote</a>
+          <a href={wiesbaden.phoneHref} class="btn-secondary">
+            <Icon name="phone" class="h-4 w-4" /> {wiesbaden.phoneDisplay}
+          </a>
+        </div>
+      </div>
+      <div class="reveal aspect-[4/3] w-full overflow-hidden rounded-lg">
+        <img src="/work/action-flur-wischen.jpg" alt="Routine cleaning of an office building in the Mainz area" class="h-full w-full object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Good to Know</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Mainz Is Our Service Area</h2>
+        <p class="mt-4 text-brand-700">
+          We serve Mainz from our head office in Wiesbaden – without a branch on site, but with short
+          routes across the Rhine bridges and a fixed point of contact for your property. The area around
+          the university and the city centre is also part of our service area.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Services in Mainz</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Particularly in Demand</h2>
+      </div>
+      <div class="reveal-group mt-10 grid gap-5 sm:grid-cols-2">
+        {keyServices.map((l) => (
+          <a href={l.href} class="reveal-item card block p-6 transition-colors hover:border-accent-600">
+            <h3 class="font-semibold text-brand-950">{l.title}</h3>
+            <p class="mt-2 text-sm text-brand-700">{l.text}</p>
+          </a>
+        ))}
+      </div>
+      <div class="mt-8 text-center">
+        <a href="/en/services/" class="btn-secondary">View All Services</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page max-w-2xl">
+      <h2 class="reveal text-2xl font-semibold sm:text-3xl">Frequently Asked Questions About Mainz</h2>
+      <div class="mt-6 space-y-4">
+        {faq.map((f) => (
+          <details class="group card p-5">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-brand-950 marker:content-none">
+              {f.question}
+              <Icon name="chevron-down" class="h-5 w-5 shrink-0 text-brand-500 transition-transform group-open:rotate-180" />
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-brand-700">{f.answer}</p>
+          </details>
+        ))}
+      </div>
+      <a href="/en/faq/" class="btn-secondary mt-8">All Questions &amp; Answers</a>
+    </div>
+  </section>
+
+  <section class="bg-brand-950 py-14 sm:py-16">
+    <div class="container-page flex flex-col items-center gap-5 text-center">
+      <h2 class="text-2xl font-semibold text-white sm:text-3xl">Looking for reliable building cleaning in Mainz?</h2>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <a href="/en/contact/" class="btn-primary">Request a Free Quote</a>
+        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-[19px] py-[10px] text-[0.95rem] text-white transition-colors hover:bg-white/10">
+          <Icon name="whatsapp" class="h-4 w-4" /> WhatsApp
+        </a>
+        <a href={wiesbaden.phoneHref} class="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-[19px] py-[10px] text-[0.95rem] text-white transition-colors hover:bg-white/10">
+          <Icon name="phone" class="h-4 w-4" /> Call Now
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

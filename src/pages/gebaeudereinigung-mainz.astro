@@ -1,0 +1,149 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import Icon from "../components/Icon.astro";
+import { locations, getWhatsappHref } from "../config/site";
+
+const whatsappHref = getWhatsappHref("de");
+
+const wiesbaden = locations[0];
+
+const wichtigsteLeistungen = [
+  { title: "Büroreinigung", href: "/leistungen/bueroreinigung/", text: "Für Büros, Kanzleien und Verwaltungsgebäude in Mainz." },
+  { title: "Unterhaltsreinigung", href: "/leistungen/unterhaltsreinigung/", text: "Regelmäßige Reinigung für Gewerbeobjekte und Hausverwaltungen." },
+  { title: "Praxisreinigung", href: "/leistungen/bueroreinigung/", text: "Hygienische Reinigung für Arztpraxen und medizinische Einrichtungen." },
+  { title: "Fenster- & Glasreinigung", href: "/leistungen/fenster-glasreinigung/", text: "Streifenfreie Fenster für Büro- und Geschäftsgebäude." },
+];
+
+const faq = [
+  {
+    question: "Ist WA-Clean auch in Mainz tätig?",
+    answer: "Ja. Mainz gehört zu unserem Einsatzgebiet. Wir betreuen dort Unternehmen, Hausverwaltungen und Privatkunden von unserer Hauptniederlassung in Wiesbaden aus.",
+  },
+  {
+    question: "Haben Sie eine eigene Niederlassung in Mainz?",
+    answer: `Nein. Unsere Hauptniederlassung liegt in Wiesbaden (${wiesbaden.street}, ${wiesbaden.zip} ${wiesbaden.city}). Durch die direkte Nähe zu Mainz erreichen wir Objekte dort mit kurzen Anfahrtswegen und flexiblen Terminen.`,
+  },
+  {
+    question: "Berechnen Sie Anfahrtskosten für Objekte in Mainz?",
+    answer: "Bei Daueraufträgen innerhalb eines Umkreises von 30 km um unsere Standorte Wiesbaden oder Oestrich-Winkel berechnen wir keine zusätzlichen Anfahrtskosten – große Teile von Mainz liegen in diesem Radius. Details klären wir gerne individuell.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
+---
+
+<Layout
+  title="Gebäudereinigung Mainz"
+  description="Gebäudereinigung in Mainz: WA-Clean betreut Büros, Praxen und Gewerbeobjekte im Raum Mainz von der nahegelegenen Hauptniederlassung Wiesbaden aus. Kostenloses Angebot."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+
+  <Breadcrumbs items={[{ label: "Startseite", href: "/" }, { label: "Gebäudereinigung Mainz", href: "/gebaeudereinigung-mainz/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div class="reveal">
+        <p class="eyebrow">Einsatzgebiet Mainz</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Gebäudereinigung im Raum Mainz</h1>
+        <p class="mt-6 text-brand-700 leading-relaxed">
+          Mainz liegt nur wenige Fahrminuten von unserer Hauptniederlassung in Wiesbaden entfernt – die
+          direkte Nachbarschaft der beiden Landeshauptstädte am Rhein ermöglicht uns kurze Anfahrtswege
+          und flexible Termine auch für Objekte in Mainz und Umgebung.
+        </p>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          Wir betreuen Büros, Praxen, Hausverwaltungen und Gewerbeobjekte im Raum Mainz – von der
+          regelmäßigen Unterhaltsreinigung bis zur einmaligen Grundreinigung.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href="/kontakt/" class="btn-primary">Kostenloses Angebot anfordern</a>
+          <a href={wiesbaden.phoneHref} class="btn-secondary">
+            <Icon name="phone" class="h-4 w-4" /> {wiesbaden.phoneDisplay}
+          </a>
+        </div>
+      </div>
+      <div class="reveal aspect-[4/3] w-full overflow-hidden rounded-lg">
+        <img src="/work/action-flur-wischen.jpg" alt="Unterhaltsreinigung eines Bürogebäudes im Raum Mainz" class="h-full w-full object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Einordnung: Einsatzgebiet, keine Niederlassung -->
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Gut zu wissen</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Mainz ist unser Einsatzgebiet</h2>
+        <p class="mt-4 text-brand-700">
+          Wir betreuen Mainz von unserer Hauptniederlassung in Wiesbaden aus – ohne eigenen Standort vor
+          Ort, aber mit kurzen Wegen über die Rheinbrücken und einem festen Ansprechpartner für Ihr
+          Objekt. Auch der Raum um die Universität und die Innenstadt gehört zu unserem Einsatzgebiet.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leistungen -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Leistungen in Mainz</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Besonders gefragt</h2>
+      </div>
+      <div class="reveal-group mt-10 grid gap-5 sm:grid-cols-2">
+        {wichtigsteLeistungen.map((l) => (
+          <a href={l.href} class="reveal-item card block p-6 transition-colors hover:border-accent-600">
+            <h3 class="font-semibold text-brand-950">{l.title}</h3>
+            <p class="mt-2 text-sm text-brand-700">{l.text}</p>
+          </a>
+        ))}
+      </div>
+      <div class="mt-8 text-center">
+        <a href="/leistungen/" class="btn-secondary">Alle Leistungen ansehen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page max-w-2xl">
+      <h2 class="reveal text-2xl font-semibold sm:text-3xl">Häufige Fragen zu Mainz</h2>
+      <div class="mt-6 space-y-4">
+        {faq.map((f) => (
+          <details class="group card p-5">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-brand-950 marker:content-none">
+              {f.question}
+              <Icon name="chevron-down" class="h-5 w-5 shrink-0 text-brand-500 transition-transform group-open:rotate-180" />
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-brand-700">{f.answer}</p>
+          </details>
+        ))}
+      </div>
+      <a href="/faq/" class="btn-secondary mt-8">Alle Fragen &amp; Antworten</a>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-brand-950 py-14 sm:py-16">
+    <div class="container-page flex flex-col items-center gap-5 text-center">
+      <h2 class="text-2xl font-semibold text-white sm:text-3xl">Sie suchen eine zuverlässige Gebäudereinigung in Mainz?</h2>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <a href="/kontakt/" class="btn-primary">Kostenloses Angebot anfordern</a>
+        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-[19px] py-[10px] text-[0.95rem] text-white transition-colors hover:bg-white/10">
+          <Icon name="whatsapp" class="h-4 w-4" /> WhatsApp
+        </a>
+        <a href={wiesbaden.phoneHref} class="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-[19px] py-[10px] text-[0.95rem] text-white transition-colors hover:bg-white/10">
+          <Icon name="phone" class="h-4 w-4" /> Jetzt anrufen
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

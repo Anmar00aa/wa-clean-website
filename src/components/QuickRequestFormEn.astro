@@ -1,0 +1,119 @@
+---
+// Englische Version von QuickRequestForm.astro – gleiche Feldnamen,
+// übersetzte Texte, dieselbe Versand-Logik (src/lib/formSubmit.ts).
+import { site, contactRegions } from "../config/site";
+
+interface Props {
+  services: string[];
+}
+
+const { services } = Astro.props;
+---
+
+<div class="reveal card p-5 shadow-xl shadow-brand-950/10 sm:p-6" data-inline-form-wrap>
+  <p class="text-lg font-semibold text-brand-950">Request a Free Quote</p>
+  <p class="mt-1 text-sm text-brand-600">A few quick steps to your no-obligation quote.</p>
+
+  <form class="mt-5 grid gap-3.5" action={site.formEndpoint} method="POST" data-inline-form novalidate>
+    <div class="hidden" aria-hidden="true">
+      <label for="hero-en-website">Leave this field empty</label>
+      <input type="text" id="hero-en-website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    <input type="hidden" name="_subject" value="New quick enquiry (EN hero) – wa-clean.de" />
+
+    <div>
+      <label for="hero-en-name" class="sr-only">Name / Company</label>
+      <input
+        type="text"
+        id="hero-en-name"
+        name="name"
+        required
+        autocomplete="name"
+        placeholder="Name / Company *"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+      />
+    </div>
+
+    <div class="grid gap-3.5 sm:grid-cols-2">
+      <div>
+        <label for="hero-en-telefon" class="sr-only">Phone number</label>
+        <input
+          type="tel"
+          id="hero-en-telefon"
+          name="telefon"
+          required
+          autocomplete="tel"
+          placeholder="Phone number *"
+          class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+        />
+      </div>
+      <div>
+        <label for="hero-en-email" class="sr-only">Email</label>
+        <input
+          type="email"
+          id="hero-en-email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder="Email *"
+          class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 placeholder:text-brand-900/40 focus:ring-2 focus:ring-accent-600"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label for="hero-en-leistung" class="sr-only">Service needed</label>
+      <select
+        id="hero-en-leistung"
+        name="leistung"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600"
+      >
+        <option value="">Service needed (optional)</option>
+        {services.map((s) => <option value={s}>{s}</option>)}
+        <option value="Other">Other / not sure</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="hero-en-region" class="sr-only">Region</label>
+      <select
+        id="hero-en-region"
+        name="region"
+        class="w-full rounded-md border-0 bg-brand-50 px-4 py-2.5 text-sm text-brand-950 ring-1 ring-inset ring-brand-950/10 focus:ring-2 focus:ring-accent-600"
+      >
+        <option value="">Region (optional)</option>
+        {contactRegions.map((r) => <option value={r}>{r}</option>)}
+      </select>
+    </div>
+
+    <label class="flex items-start gap-2.5 text-xs text-brand-900/70">
+      <input
+        type="checkbox"
+        name="datenschutz"
+        required
+        class="mt-0.5 h-3.5 w-3.5 rounded border-brand-950/20 text-accent-600 focus:ring-accent-600"
+      />
+      <span>
+        I agree to the <a href="/datenschutz/" class="underline hover:text-accent-600">privacy policy</a>. *
+      </span>
+    </label>
+
+    <button type="submit" class="btn-primary w-full">Request a Free Quote</button>
+    <p class="text-center text-xs text-brand-600">No obligation &amp; free of charge</p>
+  </form>
+
+  <div class="py-4 text-center" data-inline-form-success hidden>
+    <p class="text-base font-semibold text-brand-950">Thank you for your enquiry!</p>
+    <p class="mt-1.5 text-sm text-brand-700">We'll get back to you as soon as possible with a no-obligation quote.</p>
+  </div>
+</div>
+
+<script>
+  import { setupInlineForm } from "../lib/formSubmit";
+
+  document.querySelectorAll<HTMLElement>("[data-inline-form-wrap]").forEach((wrap) => {
+    const form = wrap.querySelector<HTMLFormElement>("[data-inline-form]");
+    const successBox = wrap.querySelector<HTMLElement>("[data-inline-form-success]");
+    if (form) setupInlineForm(form, successBox);
+  });
+</script>

@@ -1,0 +1,144 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import FaqAccordion from "../../components/FaqAccordion.astro";
+
+const categories = [
+  {
+    title: "General Questions",
+    questions: [
+      { question: "What cleaning services do you offer?", answer: "We offer professional building cleaning for private and commercial customers. This includes routine cleaning, office cleaning, window and glass cleaning, deep cleaning, post-construction cleaning, stairwell cleaning, and individually agreed cleaning services." },
+      { question: "Which regions do you serve?", answer: "Our service area covers Wiesbaden, the Rheingau and the surrounding regions. We're happy to check individually whether we can also serve your location." },
+      { question: "Do you clean both private households and commercial properties?", answer: "Yes. We serve private customers as well as businesses, offices, practices, hotels, restaurants, stairwells and other commercial properties." },
+      { question: "Can I make a no-obligation enquiry?", answer: "Yes. You can contact us at any time without obligation. Once we've clarified the scope of service you need, you'll receive a transparent quote." },
+    ],
+  },
+  {
+    title: "Pricing & Quotes",
+    questions: [
+      { question: "How much does professional cleaning cost?", answer: "The cost depends on various factors, such as the size of the property, the level of soiling, the service required and how often cleaning takes place. That's why we prepare individual quotes." },
+      { question: "Is a site visit possible before receiving a quote?", answer: "Yes. A site visit is particularly useful for larger properties or those requiring regular cleaning. It allows us to better estimate the actual effort involved and prepare a suitable quote." },
+      { question: "Are there any hidden costs?", answer: "No. The agreed scope of service and the corresponding costs are set out transparently." },
+    ],
+  },
+  {
+    title: "Routine & Office Cleaning",
+    questions: [
+      { question: "How often can routine cleaning be carried out?", answer: "Depending on your needs, cleaning can take place daily, several times a week, weekly, or at individually agreed intervals." },
+      { question: "Can cleaning times be arranged outside our business hours?", answer: "Yes. For commercial customers, we coordinate visit times individually so that normal business operations are affected as little as possible." },
+      { question: "Can you create an individual cleaning schedule?", answer: "Yes. Together we determine which areas are cleaned, what work is required, and at what intervals it should be carried out." },
+    ],
+  },
+  {
+    title: "Window & Glass Cleaning",
+    questions: [
+      { question: "Do you clean windows including frames?", answer: "Yes. Depending on the job, glass surfaces, window frames, sills and other accessible areas can be cleaned. The exact scope is agreed in advance." },
+      { question: "Do you also clean large glass surfaces?", answer: "Yes. We also handle the cleaning of larger glass surfaces and window installations, provided they can be safely accessed." },
+      { question: "Can regular window cleaning be arranged?", answer: "Yes. In addition to one-off jobs, regular cleaning intervals can also be arranged." },
+    ],
+  },
+  {
+    title: "Deep & Post-Construction Cleaning",
+    questions: [
+      { question: "What is deep cleaning?", answer: "Deep cleaning involves a more intensive clean than routine cleaning. It's suitable, for example, for heavier soiling, after long-term use, or when a particularly thorough clean is required." },
+      { question: "Do you offer post-construction cleaning?", answer: "Yes. We carry out construction and post-construction cleaning, removing dust and typical residue after building, renovation or refurbishment work." },
+    ],
+  },
+  {
+    title: "Quality & Safety",
+    questions: [
+      { question: "Are you insured?", answer: "Yes. Appropriate insurance cover is important for professional cleaning work. Details can be clarified as needed as part of a quote or a working relationship." },
+      { question: "What happens if I'm not satisfied with the cleaning?", answer: "Your satisfaction matters to us. If something wasn't carried out as agreed, please contact us promptly. We'll review the situation and find a suitable solution." },
+      { question: "Do I need to be present during the cleaning?", answer: "No. By prior arrangement, cleaning can also take place when you're not personally on site." },
+      { question: "Can I hand over keys or access to you?", answer: "For recurring contracts, secure access arrangements can be agreed individually. We handle keys and access details responsibly and confidentially, as a matter of course." },
+    ],
+  },
+  {
+    title: "Cleaning Products & Hygiene",
+    questions: [
+      { question: "Do you bring your own cleaning products and materials?", answer: "This is agreed individually. On request, we can bring the required cleaning products and materials ourselves." },
+      { question: "Can special hygiene requirements be taken into account?", answer: "Yes. For properties with special requirements, we align cleaning procedures, products and intervals with the agreed hygiene concept." },
+    ],
+  },
+  {
+    title: "Working Together",
+    questions: [
+      { question: "Do you offer both one-off and recurring cleaning?", answer: "Yes. You can book us for one-off jobs as well as recurring cleaning work." },
+      { question: "Are custom services possible?", answer: "Yes. Every property is different. That's why services, cleaning intervals and priorities can be put together individually." },
+      { question: "How quickly will I receive a quote?", answer: "After your enquiry, we review the key details. Once all the necessary information is available, we'll prepare your individual quote as quickly as possible." },
+    ],
+  },
+  {
+    title: "Service Area & Availability",
+    questions: [
+      { question: "What does building cleaning cost in Wiesbaden?", answer: "That depends on the size of the property, the scope of service required and how often cleaning takes place. For properties in Wiesbaden, we're happy to prepare an individual, no-obligation quote." },
+      { question: "What does regular routine cleaning cost?", answer: "Costs depend on property size, cleaning interval and the scope of service required. After a brief conversation or site visit, you'll receive a transparent quote." },
+      { question: "Does WA-Clean charge travel costs?", answer: "For recurring contracts within a 30 km radius of our Wiesbaden or Oestrich-Winkel locations, we don't charge additional travel costs. For more distant locations, we communicate any possible travel costs transparently in advance." },
+      { question: "Which areas does WA-Clean serve?", answer: "Our focus is on Wiesbaden, the Rheingau and the greater Mainz area. We're also happy to take on properties outside these areas, by arrangement." },
+      { question: "Is WA-Clean active in Mainz too?", answer: "Yes. Mainz is part of our service area. We serve businesses, property managers and private customers there from our Wiesbaden and Oestrich-Winkel locations." },
+      { question: "Does WA-Clean offer window cleaning?", answer: "Yes. We handle window and glass cleaning both as a one-off and at regular intervals, for private customers and commercial properties." },
+      { question: "Does WA-Clean take on regular office cleaning?", answer: "Yes. Regular office cleaning is one of our core services. We coordinate cleaning times and intervals individually with your business operations." },
+      { question: "Are short-notice appointments possible?", answer: "We do our best to accommodate short-notice enquiries as quickly as possible. Actual availability depends on our current workload – just get in touch." },
+      { question: "Can businesses arrange a site visit?", answer: "Yes. Especially for larger properties or those requiring regular cleaning, we recommend a free site visit to realistically assess the work involved." },
+      { question: "Does WA-Clean offer individual cleaning plans?", answer: "Yes. We create individual cleaning concepts tailored to your property, your operations and your requirements – rather than off-the-shelf standard packages." },
+    ],
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: categories.flatMap((cat) =>
+    cat.questions.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    }))
+  ),
+};
+---
+
+<Layout
+  lang="en"
+  title="FAQ"
+  description="Answers to frequently asked questions about building cleaning, pricing, window and deep cleaning, and working with WA-Clean in Wiesbaden and the Rheingau."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+
+  <Breadcrumbs items={[{ label: "Home", href: "/en/" }, { label: "FAQ", href: "/en/faq/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal max-w-2xl">
+        <p class="eyebrow">FAQ</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Frequently Asked Questions</h1>
+        <p class="mt-4 text-lg text-brand-700">
+          Answers to common questions about our cleaning services in Wiesbaden, the Rheingau and the
+          surrounding area.
+        </p>
+      </div>
+
+      <div class="mt-12 space-y-12">
+        {categories.map((cat) => (
+          <div>
+            <h2 class="reveal text-xl font-semibold text-brand-950 sm:text-2xl">{cat.title}</h2>
+            <div class="mt-5">
+              <FaqAccordion items={cat.questions} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-brand-950 py-14 sm:py-16">
+    <div class="container-page flex flex-col items-center gap-5 text-center">
+      <h2 class="text-2xl font-semibold text-white sm:text-3xl">Still Have Questions?</h2>
+      <p class="max-w-xl text-brand-100/80">
+        Couldn't find your question? Get in touch – we'll advise you personally and find the right cleaning
+        solution for your property in Wiesbaden, the Rheingau and the surrounding area.
+      </p>
+      <a href="/en/contact/" class="btn-primary">Request a Free Quote</a>
+    </div>
+  </section>
+</Layout>

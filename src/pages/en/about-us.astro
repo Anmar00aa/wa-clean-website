@@ -1,0 +1,94 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import Icon from "../../components/Icon.astro";
+
+const values = [
+  { icon: "message" as const, title: "Direct Communication", text: "Short paths, clear arrangements and one fixed point of contact instead of an anonymous call centre." },
+  { icon: "shield" as const, title: "Reliability", text: "Agreed appointments are kept – so you can rely on us." },
+  { icon: "sparkle" as const, title: "Quality Over Speed", text: "Careful execution takes priority over rushing through a job." },
+  { icon: "check" as const, title: "Long-Term Partnership", text: "We work towards lasting customer relationships, not one-off jobs." },
+];
+---
+
+<Layout
+  lang="en"
+  title="About Us"
+  description="Meet the team behind your building cleaning in the Rheingau – personal, professional and committed to long-term, reliable partnership."
+>
+  <Breadcrumbs items={[{ label: "Home", href: "/en/" }, { label: "About Us", href: "/en/about-us/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:items-center">
+      <div class="reveal">
+        <p class="eyebrow">About Us</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Personal, Professional, Direct</h1>
+        <p class="mt-6 text-brand-700 leading-relaxed">
+          Behind every clean building is a team that takes its work seriously. It matters to us that
+          customers can rely on us – not just for a single job, but over the years.
+        </p>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          That's why we focus on clear arrangements, fixed points of contact and a way of working that
+          adapts to your building and your daily routine – whether it's an office, a practice, a residential
+          complex or a private household.
+        </p>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          Good cooperation is built on trust. That's why we work transparently: you know what's being
+          cleaned, when it happens and what it costs – with no hidden extra charges.
+        </p>
+      </div>
+      <div class="reveal grid grid-cols-2 gap-3">
+        <div class="col-span-2 aspect-[16/10] w-full overflow-hidden rounded-lg">
+          <img
+            src="/work/team-van.jpg"
+            alt="The WA-Clean team on site with the company van"
+            class="h-full w-full object-cover"
+          />
+        </div>
+        <div class="aspect-square w-full overflow-hidden rounded-lg">
+          <img
+            src="/work/action-flur-wischen.jpg"
+            alt="WA-Clean staff member during routine cleaning"
+            class="h-full w-full object-cover"
+          />
+        </div>
+        <div class="flex aspect-square w-full items-center rounded-lg bg-brand-50 p-4">
+          <p class="text-sm leading-relaxed text-brand-700">
+            Our team is regularly out and about in Wiesbaden and the Rheingau with our own vehicle and full
+            equipment.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">What Matters to Us</p>
+        <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Our Principles</h2>
+      </div>
+      <div class="reveal-group mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {values.map((v) => (
+          <div class="reveal-item card p-6">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-50 text-brand-950">
+              <Icon name={v.icon} class="h-5 w-5" />
+            </span>
+            <h3 class="mt-4 text-base font-semibold text-brand-950">{v.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-brand-700">{v.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page flex flex-col items-center gap-5 text-center">
+      <h2 class="text-2xl font-semibold sm:text-3xl">Get to Know Us</h2>
+      <p class="max-w-xl text-brand-700">
+        Trust works best in a personal conversation. Get in touch – we'll take the time for your enquiry.
+      </p>
+      <a href="/en/contact/" class="btn-primary">Request a Free Quote</a>
+    </div>
+  </section>
+</Layout>

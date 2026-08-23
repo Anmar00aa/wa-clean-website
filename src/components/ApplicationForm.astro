@@ -1,9 +1,11 @@
 ---
-// HINWEIS zum Versand: Wie bei ContactForm.astro und ReviewFlow.astro ist
-// dieses Formular noch nicht an ein Backend angebunden (action="#"). Für
-// eine statische Astro-Seite eignet sich z. B. Netlify Forms, Formspree
-// oder eine eigene API-Route – dort sollte auch die serverseitige Prüfung
-// des Honeypot-Felds sowie Dateityp/-größe des Lebenslaufs erfolgen.
+// Versand läuft über Formspree (site.formEndpoint), Validierung/Spam-Schutz/
+// Erfolgsmeldung teilen sich die Logik mit ContactForm.astro/ReviewFlow.astro,
+// siehe src/lib/formSubmit.ts. Hinweis: Der Lebenslauf-Anhang wird von
+// Formspree nur im bezahlten Tarif verarbeitet – im Free-Plan kommt die
+// Mail ggf. ohne Anhang an.
+import { site } from "../config/site";
+
 interface Props {
   taetigkeitsbereiche: string[];
 }
@@ -15,12 +17,13 @@ const wochentage = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 const tageszeiten = ["Vormittags", "Nachmittags", "Abends", "Flexibel"];
 ---
 
-<form class="card grid gap-5 p-6 sm:p-8" action="#" method="POST" data-application-form novalidate>
+<form class="card grid gap-5 p-6 sm:p-8" action={site.formEndpoint} method="POST" data-application-form novalidate>
   <!-- Honeypot: für Menschen unsichtbar, Bots füllen es oft blind aus -->
   <div class="hidden" aria-hidden="true">
     <label for="bewerbung-website">Bitte freilassen</label>
     <input type="text" id="bewerbung-website" name="website" tabindex="-1" autocomplete="off" />
   </div>
+  <input type="hidden" name="_subject" value="Neue Bewerbung – wa-clean.de" />
 
   <div class="grid gap-5 sm:grid-cols-2">
     <div>
@@ -218,7 +221,7 @@ const tageszeiten = ["Vormittags", "Nachmittags", "Abends", "Flexibel"];
   <button type="submit" class="btn-primary w-full sm:w-auto">Bewerbung absenden</button>
 </form>
 
-<div class="card hidden p-6 text-center sm:p-8" data-application-success>
+<div class="card p-6 text-center sm:p-8" data-application-success hidden>
   <p class="text-lg font-semibold text-brand-950">
     Vielen Dank für deine Bewerbung. Wir haben deine Angaben erhalten und melden uns bei Interesse
     schnellstmöglich bei dir.
@@ -226,6 +229,8 @@ const tageszeiten = ["Vormittags", "Nachmittags", "Abends", "Flexibel"];
 </div>
 
 <script>
+  import { setupInlineForm } from "../lib/formSubmit";
+
   function setupApplicationForm(form: HTMLFormElement) {
     const successBox = document.querySelector<HTMLElement>("[data-application-success]");
     const fileInput = form.querySelector<HTMLInputElement>("#bewerbung-lebenslauf");
@@ -266,25 +271,7 @@ const tageszeiten = ["Vormittags", "Nachmittags", "Abends", "Flexibel"];
       fileHint.classList.remove("text-red-600");
     });
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      // Honeypot: gefüllt bedeutet höchstwahrscheinlich Bot -> still verwerfen
-      const honeypot = form.querySelector<HTMLInputElement>('[name="website"]');
-      if (honeypot?.value) return;
-
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-
-      // HINWEIS: Hier fehlt noch die eigentliche Übertragung an ein Backend
-      // (siehe Kommentar am Kopf dieser Komponente). Bis dahin wird die
-      // Bestätigung ausschließlich clientseitig angezeigt.
-      form.classList.add("hidden");
-      successBox?.classList.remove("hidden");
-      successBox?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    setupInlineForm(form, successBox);
   }
 
   document.querySelectorAll<HTMLFormElement>("[data-application-form]").forEach(setupApplicationForm);

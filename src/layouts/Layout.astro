@@ -3,20 +3,33 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import MobileCtaBar from "../components/MobileCtaBar.astro";
+import FloatingContactButtons from "../components/FloatingContactButtons.astro";
 import MotionScripts from "../components/MotionScripts.astro";
-import { site, regions, locations } from "../config/site";
+import { site, regions, locations, pageTranslationsDeToEn, pageTranslationsEnToDe } from "../config/site";
 
 interface Props {
   title: string;
   description: string;
   noIndex?: boolean;
+  lang?: "de" | "en";
+  // Überschreibt die automatische DE/EN-Zuordnung aus site.ts – wird von
+  // Seiten benötigt, die nicht in der zentralen Tabelle stehen, z. B. den
+  // einzelnen Leistungsseiten (/leistungen/[slug]/ <-> /en/services/[slug]/).
+  alternateHref?: string;
 }
 
-const { title, description, noIndex = false } = Astro.props;
+const { title, description, noIndex = false, lang = "de", alternateHref } = Astro.props;
 
 const pageTitle = `${title} | ${site.name}`;
 const canonicalURL = new URL(Astro.url.pathname, site.url);
 const ogImage = new URL("/og-image.svg", site.url);
+
+const currentPath = Astro.url.pathname;
+const resolvedAlternate =
+  alternateHref ?? (lang === "en" ? pageTranslationsEnToDe[currentPath] : pageTranslationsDeToEn[currentPath]);
+
+const deHref = lang === "en" ? resolvedAlternate : currentPath;
+const enHref = lang === "en" ? currentPath : resolvedAlternate;
 
 const localBusinessJsonLd = {
   "@context": "https://schema.org",
@@ -53,7 +66,7 @@ const localBusinessJsonLd = {
 ---
 
 <!doctype html>
-<html lang="de">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -62,8 +75,12 @@ const localBusinessJsonLd = {
     <link rel="canonical" href={canonicalURL} />
     {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
+    {deHref && <link rel="alternate" hreflang="de" href={new URL(deHref, site.url).toString()} />}
+    {enHref && <link rel="alternate" hreflang="en" href={new URL(enHref, site.url).toString()} />}
+    {deHref && <link rel="alternate" hreflang="x-default" href={new URL(deHref, site.url).toString()} />}
+
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="de_DE" />
+    <meta property="og:locale" content={lang === "en" ? "en_US" : "de_DE"} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -78,12 +95,13 @@ const localBusinessJsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(localBusinessJsonLd)} is:inline />
   </head>
   <body class="flex min-h-screen flex-col">
-    <Header />
+    <Header lang={lang} alternateHref={resolvedAlternate} />
     <main id="main" class="flex-1">
       <slot />
     </main>
-    <Footer />
-    <MobileCtaBar />
+    <Footer lang={lang} />
+    <MobileCtaBar lang={lang} />
+    <FloatingContactButtons lang={lang} />
     <MotionScripts />
   </body>
 </html>

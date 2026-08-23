@@ -1,0 +1,176 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import Icon from "../../components/Icon.astro";
+import { locations, getWhatsappHref } from "../../config/site";
+
+const whatsappHref = getWhatsappHref("en");
+
+const places = [
+  "Oestrich-Winkel", "Oestrich", "Winkel", "Mittelheim", "Eltville am Rhein", "Erbach", "Martinsthal",
+  "Rauenthal", "Geisenheim", "Rüdesheim am Rhein", "Kiedrich", "Walluf", "Johannisberg", "Hattenheim",
+  "Hallgarten",
+];
+
+const rheingau = locations[1];
+
+const keyServices = [
+  { title: "Restaurant & Hospitality Cleaning", href: "/en/services/gastronomiereinigung/", text: "For wineries, restaurants and hospitality businesses in the Rheingau." },
+  { title: "Window & Glass Cleaning", href: "/en/services/fenster-glasreinigung/", text: "Clear views for dining rooms, wine bars and holiday flats." },
+  { title: "Garden Maintenance", href: "/en/services/gartenpflege/", text: "Well-kept grounds for wineries and private households." },
+  { title: "Routine Cleaning", href: "/en/services/unterhaltsreinigung/", text: "Regular cleaning for hotels, guesthouses and commercial properties." },
+];
+
+const faq = [
+  { question: "Do you have your own location in the Rheingau?", answer: `Yes. Our second location is in ${rheingau.city}, ${rheingau.street}. From there we serve the entire Rheingau with short travel distances.` },
+  { question: "Do you also clean for wineries and hospitality businesses?", answer: "Yes. We already work with wineries, restaurants and hospitality businesses in the Rheingau, and understand the particular requirements of dining rooms, wine bars and outdoor areas." },
+  { question: "Do you also take on short-notice jobs during the season?", answer: "We do our best to be flexible, especially during busy tourist periods. Actual availability depends on our current workload – just get in touch." },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
+---
+
+<Layout
+  lang="en"
+  title="Building Cleaning Rheingau"
+  description="Building cleaning in the Rheingau: we serve wineries, hospitality, hotels and private clients in Oestrich-Winkel, Eltville, Geisenheim, Rüdesheim and the surrounding area. Free quote."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+
+  <Breadcrumbs items={[{ label: "Home", href: "/en/" }, { label: "Building Cleaning Rheingau", href: "/en/rheingau/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div class="reveal">
+        <p class="eyebrow">Rheingau Location</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Building Cleaning in the Heart of the Rheingau</h1>
+        <p class="mt-6 text-brand-700 leading-relaxed">
+          The Rheingau thrives on its wineries, its hospitality industry and its tourism along the Rhine –
+          a well-kept appearance matters here more than most places. From our location in {rheingau.city},
+          we serve businesses and private clients between Walluf and Rüdesheim with short travel distances
+          and flexible scheduling.
+        </p>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          Whether it's a winery, a restaurant, a holiday flat or a private household: we adapt our cleaning
+          services to the operations and requirements of your business.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href="/en/contact/" class="btn-primary">Request a Free Quote</a>
+          <a href={rheingau.phoneHref} class="btn-secondary">
+            <Icon name="phone" class="h-4 w-4" /> {rheingau.phoneDisplay}
+          </a>
+        </div>
+      </div>
+      <div class="reveal aspect-[4/3] w-full overflow-hidden rounded-lg">
+        <img src="/work/action-gardine-fenster.jpg" alt="Window cleaning at a hospitality business in the Rheingau" class="h-full w-full object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Service Area</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Serving the Entire Rheingau</h2>
+        <p class="mt-4 text-brand-700">
+          From Oestrich-Winkel to Eltville and Geisenheim, right through to Rüdesheim am Rhein: WA-Clean
+          serves wineries, hospitality businesses, hotels and private clients across the whole Rheingau.
+        </p>
+      </div>
+      <div class="reveal-group mt-8 flex flex-wrap justify-center gap-2">
+        {places.map((p) => (
+          <span class="reveal-item rounded-full bg-white px-4 py-2 text-sm font-medium text-brand-950 ring-1 ring-inset ring-brand-100">
+            {p}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Services in the Rheingau</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Particularly in Demand</h2>
+      </div>
+      <div class="reveal-group mt-10 grid gap-5 sm:grid-cols-2">
+        {keyServices.map((l) => (
+          <a href={l.href} class="reveal-item card block p-6 transition-colors hover:border-accent-600">
+            <h3 class="font-semibold text-brand-950">{l.title}</h3>
+            <p class="mt-2 text-sm text-brand-700">{l.text}</p>
+          </a>
+        ))}
+      </div>
+      <div class="mt-8 text-center">
+        <a href="/en/services/" class="btn-secondary">View All Services</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-warm-50 py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Why WA-Clean</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Regionally Rooted</h2>
+      </div>
+      <div class="reveal-group mt-10 grid gap-6 sm:grid-cols-3">
+        <div class="reveal-item text-center">
+          <Icon name="map-pin" class="mx-auto h-6 w-6 text-accent-600" />
+          <h3 class="mt-3 font-semibold text-brand-950">Local Presence</h3>
+          <p class="mt-2 text-sm text-brand-700">Based in Oestrich-Winkel, with short distances across the whole Rheingau.</p>
+        </div>
+        <div class="reveal-item text-center">
+          <Icon name="shield" class="mx-auto h-6 w-6 text-accent-600" />
+          <h3 class="mt-3 font-semibold text-brand-950">No Travel Costs</h3>
+          <p class="mt-2 text-sm text-brand-700">For recurring contracts within a 30 km radius of Oestrich-Winkel.</p>
+        </div>
+        <div class="reveal-item text-center">
+          <Icon name="sparkle" class="mx-auto h-6 w-6 text-accent-600" />
+          <h3 class="mt-3 font-semibold text-brand-950">Hospitality Experience</h3>
+          <p class="mt-2 text-sm text-brand-700">We understand the requirements of wineries and hospitality businesses.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page max-w-2xl">
+      <h2 class="reveal text-2xl font-semibold sm:text-3xl">Frequently Asked Questions About the Rheingau</h2>
+      <div class="mt-6 space-y-4">
+        {faq.map((f) => (
+          <details class="group card p-5">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-brand-950 marker:content-none">
+              {f.question}
+              <Icon name="chevron-down" class="h-5 w-5 shrink-0 text-brand-500 transition-transform group-open:rotate-180" />
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-brand-700">{f.answer}</p>
+          </details>
+        ))}
+      </div>
+      <a href="/en/faq/" class="btn-secondary mt-8">All Questions &amp; Answers</a>
+    </div>
+  </section>
+
+  <section class="bg-brand-950 py-14 sm:py-16">
+    <div class="container-page flex flex-col items-center gap-5 text-center">
+      <h2 class="text-2xl font-semibold text-white sm:text-3xl">Looking for reliable building cleaning in the Rheingau?</h2>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <a href="/en/contact/" class="btn-primary">Request a Free Quote</a>
+        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-[19px] py-[10px] text-[0.95rem] text-white transition-colors hover:bg-white/10">
+          <Icon name="whatsapp" class="h-4 w-4" /> WhatsApp
+        </a>
+        <a href={rheingau.phoneHref} class="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-[19px] py-[10px] text-[0.95rem] text-white transition-colors hover:bg-white/10">
+          <Icon name="phone" class="h-4 w-4" /> Call Now
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,96 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import ContactFormEn from "../../components/ContactFormEn.astro";
+import Icon from "../../components/Icon.astro";
+import { site, locations } from "../../config/site";
+
+const allServiceTitles = (await getCollection("leistungenEn"))
+  .sort((a, b) => a.data.reihenfolge - b.data.reihenfolge)
+  .map((s) => s.data.title);
+---
+
+<Layout
+  lang="en"
+  title="Contact & Quote"
+  description="Contact us for a free, no-obligation quote for building cleaning in the Rheingau and in Wiesbaden. By phone, email, or via the contact form."
+>
+  <Breadcrumbs items={[{ label: "Home", href: "/en/" }, { label: "Contact", href: "/en/contact/" }]} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
+      <div class="reveal">
+        <p class="eyebrow">Contact</p>
+        <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Request a Free Quote</h1>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          By phone, email or form – we'll get back to you promptly with a no-obligation quote tailored to
+          your building.
+        </p>
+
+        <ul class="reveal-group mt-8 space-y-4 text-sm">
+          <li class="reveal-item flex items-start gap-3">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-950">
+              <Icon name="mail" class="h-4.5 w-4.5" />
+            </span>
+            <div>
+              <p class="font-semibold text-brand-950">Email</p>
+              <a href={`mailto:${site.email}`} class="block text-brand-700 hover:text-accent-600">{site.email}</a>
+              <a href={`mailto:${site.emailService}`} class="block text-brand-700 hover:text-accent-600">{site.emailService}</a>
+            </div>
+          </li>
+          <li class="reveal-item flex items-start gap-3">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-950">
+              <Icon name="clock" class="h-4.5 w-4.5" />
+            </span>
+            <div>
+              <p class="font-semibold text-brand-950">Availability</p>
+              <p class="text-brand-700">{site.openingHours}</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="reveal-group mt-8 grid gap-4 sm:grid-cols-2">
+          {locations.map((loc) => (
+            <div class="reveal-item card p-5">
+              <div class="flex items-center gap-2">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-950">
+                  <Icon name="map-pin" class="h-4 w-4" />
+                </span>
+                <p class="text-sm font-semibold text-brand-950">{loc.isMain ? "Head Office" : "Rheingau Location"}</p>
+              </div>
+              <p class="mt-3 text-sm text-brand-700">{loc.street}<br />{loc.zip} {loc.city}</p>
+              <p class="mt-2 text-xs text-brand-600">Point of contact: {loc.manager}</p>
+              <div class="mt-3 space-y-1 text-sm">
+                <a href={loc.phoneHref} class="flex items-center gap-1.5 text-brand-700 hover:text-accent-600">
+                  <Icon name="phone" class="h-3.5 w-3.5" />
+                  {loc.phoneDisplay}
+                </a>
+                <a href={loc.mobileHref} class="flex items-center gap-1.5 text-brand-700 hover:text-accent-600">
+                  <Icon name="phone" class="h-3.5 w-3.5" />
+                  {loc.mobileDisplay} <span class="text-xs text-brand-600">(mobile)</span>
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <ContactFormEn services={allServiceTitles} />
+        <p class="mt-4 flex flex-col items-center gap-1 text-center text-sm text-brand-700 sm:flex-row sm:justify-center sm:gap-2">
+          <span>Or call us directly:</span>
+          <span class="flex flex-col items-center gap-1 sm:flex-row sm:gap-2">
+            <a href={locations[0].phoneHref} class="font-medium text-brand-950 hover:text-accent-600">
+              Wiesbaden {locations[0].phoneDisplay}
+            </a>
+            <span class="hidden sm:inline">·</span>
+            <a href={locations[1].phoneHref} class="font-medium text-brand-950 hover:text-accent-600">
+              Rheingau {locations[1].phoneDisplay}
+            </a>
+          </span>
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
