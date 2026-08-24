@@ -2,14 +2,14 @@
 import Layout from "../layouts/Layout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import Icon from "../components/Icon.astro";
-import { locations, getWhatsappHref } from "../config/site";
+import { site, locations, partners, getWhatsappHref } from "../config/site";
 
 const whatsappHref = getWhatsappHref("de");
 
 const orte = [
   "Oestrich-Winkel", "Oestrich", "Winkel", "Mittelheim", "Eltville am Rhein", "Erbach", "Martinsthal",
-  "Rauenthal", "Geisenheim", "Rüdesheim am Rhein", "Kiedrich", "Walluf", "Johannisberg", "Hattenheim",
-  "Hallgarten",
+  "Rauenthal", "Geisenheim", "Rüdesheim am Rhein", "Assmannshausen", "Lorch", "Kiedrich", "Walluf",
+  "Johannisberg", "Hattenheim", "Hallgarten",
 ];
 
 const rheingau = locations[1];
@@ -20,6 +20,27 @@ const wichtigsteLeistungen = [
   { title: "Gartenpflege", href: "/leistungen/gartenpflege/", text: "Gepflegte Außenanlagen für Weingüter und Privathaushalte." },
   { title: "Unterhaltsreinigung", href: "/leistungen/unterhaltsreinigung/", text: "Regelmäßige Reinigung für Hotels, Pensionen und Gewerbeobjekte." },
 ];
+
+const branchenLeistungen = [
+  { title: "Weingutreinigung", text: "Produktions- und Verkostungsräume, Kellereien und Verwaltungsbereiche – abgestimmt auf den Betrieb während und außerhalb der Saison." },
+  { title: "Vinothekreinigung", text: "Gepflegte Verkaufs- und Präsentationsflächen für Vinotheken, damit Glas, Theken und Böden immer einladend wirken." },
+  { title: "Ferienwohnungsreinigung", text: "Zuverlässige Endreinigung zwischen den Gästewechseln, damit Ihre Ferienwohnung pünktlich übergabebereit ist." },
+];
+
+const steps = [
+  { title: "Anfrage senden", text: "Teilen Sie uns kurz mit, was im Rheingau gereinigt werden soll." },
+  { title: "Besichtigung & Angebot", text: "Bei Bedarf besichtigen wir das Objekt vor Ort und erstellen ein individuelles Angebot." },
+  { title: "Reinigung starten", text: "Nach Ihrer Freigabe planen wir den Einsatz und legen los." },
+];
+
+const referenzNamen = [
+  "Weingut Prinz von Hessen",
+  "Weingut Goldatzel",
+  "Hochschule Geisenheim",
+  "EBS Universität",
+  "Rhein Pavillon Da Nico",
+];
+const referenzen = partners.filter((p) => referenzNamen.includes(p.name));
 
 const faq = [
   {
@@ -34,6 +55,14 @@ const faq = [
     question: "Übernehmen Sie auch kurzfristige Einsätze in der Saison?",
     answer: "Wir bemühen uns, gerade in touristisch stark frequentierten Zeiten flexibel zu unterstützen. Die tatsächliche Verfügbarkeit hängt von unserer aktuellen Auslastung ab – sprechen Sie uns einfach an.",
   },
+  {
+    question: "Reinigen Sie auch Ferienwohnungen zwischen Gästewechseln?",
+    answer: "Ja. Für Vermieter im Rheingau übernehmen wir die Endreinigung zwischen zwei Gästewechseln, damit die Wohnung pünktlich und gepflegt für die nächsten Gäste bereitsteht.",
+  },
+  {
+    question: "Was kostet die Reinigung für ein Weingut oder eine Vinothek?",
+    answer: "Das hängt stark vom Betrieb ab – Produktionsflächen, Verkostungsräume und Verkaufsflächen haben unterschiedliche Anforderungen. Wir schauen uns Ihren Betrieb gerne an und erstellen ein passendes, unverbindliches Angebot.",
+  },
 ];
 
 const faqJsonLd = {
@@ -45,6 +74,30 @@ const faqJsonLd = {
     acceptedAnswer: { "@type": "Answer", text: f.answer },
   })),
 };
+
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: `${site.legalName} – Standort Rheingau`,
+  url: `${site.url}/gebaeudereinigung-rheingau/`,
+  telephone: rheingau.phoneHref.replace("tel:", ""),
+  email: site.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: rheingau.street,
+    postalCode: rheingau.zip,
+    addressLocality: rheingau.city,
+    addressCountry: "DE",
+  },
+  areaServed: { "@type": "Place", name: "Rheingau" },
+  openingHoursSpecification: [
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "08:00", closes: "20:00" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Saturday"], opens: "10:00", closes: "18:00" },
+  ],
+  priceRange: "$$",
+};
+
+const mapEmbedSrc = `https://www.google.com/maps?q=${encodeURIComponent(`${rheingau.street}, ${rheingau.zip} ${rheingau.city}`)}&output=embed`;
 ---
 
 <Layout
@@ -52,6 +105,7 @@ const faqJsonLd = {
   description="Gebäudereinigung im Rheingau: Wir betreuen Weingüter, Gastronomie, Hotels und Privatkunden in Oestrich-Winkel, Eltville, Geisenheim, Rüdesheim und Umgebung. Kostenloses Angebot."
 >
   <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(localBusinessJsonLd)} is:inline />
 
   <Breadcrumbs items={[{ label: "Startseite", href: "/" }, { label: "Gebäudereinigung Rheingau", href: "/gebaeudereinigung-rheingau/" }]} />
 
@@ -68,7 +122,13 @@ const faqJsonLd = {
         </p>
         <p class="mt-4 text-brand-700 leading-relaxed">
           Ob Weingut, Restaurant, Ferienwohnung oder Privathaushalt: Wir passen unsere Reinigungsleistungen
-          an die Abläufe und Anforderungen Ihres Betriebs an.
+          an die Abläufe und Anforderungen Ihres Betriebs an – von der laufenden Unterhaltsreinigung bis
+          zur Endreinigung zwischen zwei Gästewechseln.
+        </p>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          Unser Team vor Ort in {rheingau.city} kennt die Region und ihre Betriebe – Ihr fester
+          Ansprechpartner ist {rheingau.manager}. Für Objekte in Wiesbaden und Mainz sind wir über unsere
+          Hauptniederlassung ebenfalls erreichbar.
         </p>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <a href="/kontakt/" class="btn-primary">Kostenloses Angebot anfordern</a>
@@ -90,8 +150,9 @@ const faqJsonLd = {
         <p class="eyebrow">Einsatzgebiet</p>
         <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Im gesamten Rheingau für Sie da</h2>
         <p class="mt-4 text-brand-700">
-          Von Oestrich-Winkel über Eltville und Geisenheim bis nach Rüdesheim am Rhein: WA-Clean ist im
-          gesamten Rheingau für Weingüter, Gastronomiebetriebe, Hotels und Privatkunden im Einsatz.
+          Von Oestrich-Winkel über Eltville und Geisenheim bis nach Rüdesheim am Rhein und Assmannshausen:
+          WA-Clean ist im gesamten Rheingau für Weingüter, Gastronomiebetriebe, Hotels und Privatkunden
+          im Einsatz.
         </p>
       </div>
       <div class="reveal-group mt-8 flex flex-wrap justify-center gap-2">
@@ -125,35 +186,88 @@ const faqJsonLd = {
     </div>
   </section>
 
-  <!-- Warum WA-Clean -->
+  <!-- Branchenspezifische Leistungen -->
   <section class="bg-warm-50 py-14 sm:py-16">
     <div class="container-page">
       <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="eyebrow">Warum WA-Clean</p>
-        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Regional verwurzelt</h2>
+        <p class="eyebrow">Speziell für die Region</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Weingüter, Vinotheken & Ferienwohnungen</h2>
       </div>
       <div class="reveal-group mt-10 grid gap-6 sm:grid-cols-3">
-        <div class="reveal-item text-center">
-          <Icon name="map-pin" class="mx-auto h-6 w-6 text-accent-600" />
-          <h3 class="mt-3 font-semibold text-brand-950">Eigener Standort</h3>
-          <p class="mt-2 text-sm text-brand-700">Vor Ort in Oestrich-Winkel, kurze Wege im ganzen Rheingau.</p>
+        {branchenLeistungen.map((b) => (
+          <div class="reveal-item card p-6">
+            <h3 class="font-semibold text-brand-950">{b.title}</h3>
+            <p class="mt-2 text-sm text-brand-700">{b.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- So funktioniert's -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Ablauf</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">In 3 Schritten zu Ihrer Reinigung</h2>
+      </div>
+      <div class="reveal-group mt-10 grid gap-8 sm:grid-cols-3">
+        {steps.map((step, i) => (
+          <div class="reveal-item text-center">
+            <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-600 text-lg font-semibold text-white">
+              {i + 1}
+            </span>
+            <h3 class="mt-4 text-base font-semibold text-brand-950">{step.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-brand-700">{step.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {referenzen.length > 0 && (
+    <section class="bg-warm-50 py-14 sm:py-16">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-2xl text-center">
+          <p class="eyebrow">Referenzen</p>
+          <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Diese Kunden vertrauen uns im Rheingau</h2>
         </div>
-        <div class="reveal-item text-center">
-          <Icon name="shield" class="mx-auto h-6 w-6 text-accent-600" />
-          <h3 class="mt-3 font-semibold text-brand-950">Keine Anfahrtskosten</h3>
-          <p class="mt-2 text-sm text-brand-700">Bei Daueraufträgen im 30-km-Umkreis um Oestrich-Winkel.</p>
+        <div class="reveal-group mt-10 grid grid-cols-2 items-center gap-8 sm:grid-cols-3">
+          {referenzen.map((r) => (
+            <div class="reveal-item flex items-center justify-center p-4">
+              <img src={r.logo} alt={r.name} class="max-h-14 w-full object-contain grayscale transition-all hover:grayscale-0" />
+            </div>
+          ))}
         </div>
-        <div class="reveal-item text-center">
-          <Icon name="sparkle" class="mx-auto h-6 w-6 text-accent-600" />
-          <h3 class="mt-3 font-semibold text-brand-950">Erfahrung mit Gastronomie</h3>
-          <p class="mt-2 text-sm text-brand-700">Wir kennen die Anforderungen von Weingütern und Gastronomiebetrieben.</p>
+        <div class="mt-8 text-center">
+          <a href="/referenzen/" class="btn-secondary">Alle Referenzen ansehen</a>
         </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Karte -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">So finden Sie uns</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Standort Rheingau</h2>
+        <p class="mt-4 text-brand-700">{rheingau.street}, {rheingau.zip} {rheingau.city}</p>
+      </div>
+      <div class="reveal mt-8 aspect-[16/9] w-full overflow-hidden rounded-lg ring-1 ring-inset ring-brand-100">
+        <iframe
+          src={mapEmbedSrc}
+          class="h-full w-full border-0"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Karte: WA-Clean Standort Rheingau"
+        ></iframe>
       </div>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="py-14 sm:py-16">
+  <section class="bg-warm-50 py-14 sm:py-16">
     <div class="container-page max-w-2xl">
       <h2 class="reveal text-2xl font-semibold sm:text-3xl">Häufige Fragen zum Rheingau</h2>
       <div class="mt-6 space-y-4">
@@ -168,6 +282,26 @@ const faqJsonLd = {
         ))}
       </div>
       <a href="/faq/" class="btn-secondary mt-8">Alle Fragen &amp; Antworten</a>
+    </div>
+  </section>
+
+  <!-- Weitere Standorte -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Auch interessant</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Unsere weiteren Standorte</h2>
+      </div>
+      <div class="reveal-group mt-8 grid gap-5 sm:grid-cols-2">
+        <a href="/gebaeudereinigung-wiesbaden/" class="reveal-item card block p-6 transition-colors hover:border-accent-600">
+          <h3 class="font-semibold text-brand-950">Gebäudereinigung Wiesbaden</h3>
+          <p class="mt-2 text-sm text-brand-700">Unsere Hauptniederlassung betreut die Landeshauptstadt und alle Stadtteile.</p>
+        </a>
+        <a href="/gebaeudereinigung-mainz/" class="reveal-item card block p-6 transition-colors hover:border-accent-600">
+          <h3 class="font-semibold text-brand-950">Gebäudereinigung Mainz</h3>
+          <p class="mt-2 text-sm text-brand-700">Von Wiesbaden aus sind wir auch für Objekte in Mainz und Umgebung im Einsatz.</p>
+        </a>
+      </div>
     </div>
   </section>
 

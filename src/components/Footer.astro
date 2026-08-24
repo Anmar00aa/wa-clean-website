@@ -76,7 +76,11 @@ const t = lang === "en"
           <li>
             <div class="flex items-start gap-2">
               <Icon name="map-pin" class="mt-0.5 h-4 w-4 shrink-0" />
-              <span>{loc.isMain ? t.mainOffice : t.rheingauOffice}: {loc.street}, {loc.zip} {loc.city}</span>
+              <span>
+                <a href={loc.isMain ? "/gebaeudereinigung-wiesbaden/" : "/gebaeudereinigung-rheingau/"} class="hover:text-white">
+                  {loc.isMain ? t.mainOffice : t.rheingauOffice}
+                </a>: {loc.street}, {loc.zip} {loc.city}
+              </span>
             </div>
             <div class="mt-1.5 flex items-center gap-2">
               <Icon name="phone" class="h-4 w-4 shrink-0" />
@@ -88,6 +92,12 @@ const t = lang === "en"
             </div>
           </li>
         ))}
+        {lang === "de" && (
+          <li class="flex items-center gap-2">
+            <Icon name="map-pin" class="h-4 w-4 shrink-0" />
+            <span><a href="/gebaeudereinigung-mainz/" class="hover:text-white">Einsatzgebiet Mainz</a></span>
+          </li>
+        )}
         <li class="flex items-center gap-2">
           <Icon name="mail" class="h-4 w-4 shrink-0" />
           <span>{t.email}: <a href={`mailto:${site.email}`} class="hover:text-white">{site.email}</a></span>

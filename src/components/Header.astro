@@ -30,17 +30,29 @@ function isActive(href: string) {
     <nav class="hidden lg:block" aria-label={lang === "en" ? "Main navigation" : "Hauptnavigation"}>
       <ul class="flex items-center gap-7">
         {nav.map((item) => (
-          <li>
+          <li class:list={["children" in item && item.children && "group relative"]}>
             <a
               href={item.href}
               class:list={[
-                "text-[0.95rem] font-medium transition-colors hover:text-accent-600",
+                "flex items-center gap-1 text-[0.95rem] font-medium transition-colors hover:text-accent-600",
                 isActive(item.href) ? "text-accent-600" : "text-brand-900",
               ]}
               aria-current={isActive(item.href) ? "page" : undefined}
             >
               {item.label}
+              {"children" in item && item.children && <Icon name="chevron-down" class="h-3.5 w-3.5" />}
             </a>
+            {"children" in item && item.children && (
+              <ul class="invisible absolute left-0 top-full z-50 mt-3 w-56 rounded-lg bg-white p-2 opacity-0 shadow-xl ring-1 ring-brand-950/10 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                {item.children.map((child) => (
+                  <li>
+                    <a href={child.href} class="block rounded-md px-3 py-2 text-sm font-medium text-brand-900 hover:bg-brand-50 hover:text-accent-600">
+                      {child.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ul>
@@ -110,15 +122,26 @@ function isActive(href: string) {
   <div id="mobile-menu" class="hidden border-t border-brand-950/[0.06] bg-white lg:hidden">
     <nav class="container-page flex flex-col gap-1 py-4" aria-label={lang === "en" ? "Mobile navigation" : "Mobile Navigation"}>
       {nav.map((item) => (
-        <a
-          href={item.href}
-          class:list={[
-            "rounded-md px-3 py-2.5 text-base font-medium",
-            isActive(item.href) ? "bg-brand-50 text-accent-600" : "text-brand-900",
-          ]}
-        >
-          {item.label}
-        </a>
+        <>
+          <a
+            href={item.href}
+            class:list={[
+              "rounded-md px-3 py-2.5 text-base font-medium",
+              isActive(item.href) ? "bg-brand-50 text-accent-600" : "text-brand-900",
+            ]}
+          >
+            {item.label}
+          </a>
+          {"children" in item && item.children && (
+            <div class="ml-3 flex flex-col gap-1 border-l border-brand-100 pl-3">
+              {item.children.map((child) => (
+                <a href={child.href} class="rounded-md px-3 py-2 text-sm font-medium text-brand-700 hover:text-accent-600">
+                  {child.label}
+                </a>
+              ))}
+            </div>
+          )}
+        </>
       ))}
       <a href={lang === "en" ? "/en/contact/" : "/kontakt/"} class="btn-primary mt-3 w-full">{t.requestQuote}</a>
       <a href={site.phoneHref} class="btn-secondary mt-2 w-full">

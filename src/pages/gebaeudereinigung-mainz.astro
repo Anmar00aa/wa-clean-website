@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import Icon from "../components/Icon.astro";
-import { locations, getWhatsappHref } from "../config/site";
+import { site, locations, getWhatsappHref } from "../config/site";
 
 const whatsappHref = getWhatsappHref("de");
 
@@ -13,6 +13,12 @@ const wichtigsteLeistungen = [
   { title: "Unterhaltsreinigung", href: "/leistungen/unterhaltsreinigung/", text: "Regelmäßige Reinigung für Gewerbeobjekte und Hausverwaltungen." },
   { title: "Praxisreinigung", href: "/leistungen/bueroreinigung/", text: "Hygienische Reinigung für Arztpraxen und medizinische Einrichtungen." },
   { title: "Fenster- & Glasreinigung", href: "/leistungen/fenster-glasreinigung/", text: "Streifenfreie Fenster für Büro- und Geschäftsgebäude." },
+];
+
+const steps = [
+  { title: "Anfrage senden", text: "Teilen Sie uns kurz mit, was in Mainz gereinigt werden soll." },
+  { title: "Besichtigung & Angebot", text: "Bei Bedarf besichtigen wir das Objekt vor Ort und erstellen ein individuelles Angebot." },
+  { title: "Reinigung starten", text: "Nach Ihrer Freigabe planen wir den Einsatz und legen los." },
 ];
 
 const faq = [
@@ -28,6 +34,14 @@ const faq = [
     question: "Berechnen Sie Anfahrtskosten für Objekte in Mainz?",
     answer: "Bei Daueraufträgen innerhalb eines Umkreises von 30 km um unsere Standorte Wiesbaden oder Oestrich-Winkel berechnen wir keine zusätzlichen Anfahrtskosten – große Teile von Mainz liegen in diesem Radius. Details klären wir gerne individuell.",
   },
+  {
+    question: "Wie schnell bekomme ich ein Angebot für ein Objekt in Mainz?",
+    answer: "In der Regel melden wir uns innerhalb weniger Werktage bei Ihnen. Bei größeren Objekten vereinbaren wir vorab einen Besichtigungstermin, damit das Angebot wirklich zu Ihrem Objekt passt.",
+  },
+  {
+    question: "Welche Stadtteile von Mainz decken Sie ab?",
+    answer: "Wir sind für Objekte in der gesamten Stadt erreichbar, auch auf der linksrheinischen Seite. Sprechen Sie uns einfach auf Ihren konkreten Standort an, wir prüfen die Anfahrt individuell.",
+  },
 ];
 
 const faqJsonLd = {
@@ -39,6 +53,28 @@ const faqJsonLd = {
     acceptedAnswer: { "@type": "Answer", text: f.answer },
   })),
 };
+
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: `${site.legalName} – Einsatzgebiet Mainz`,
+  url: `${site.url}/gebaeudereinigung-mainz/`,
+  telephone: wiesbaden.phoneHref.replace("tel:", ""),
+  email: site.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: wiesbaden.street,
+    postalCode: wiesbaden.zip,
+    addressLocality: wiesbaden.city,
+    addressCountry: "DE",
+  },
+  areaServed: { "@type": "City", name: "Mainz" },
+  openingHoursSpecification: [
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "08:00", closes: "20:00" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Saturday"], opens: "10:00", closes: "18:00" },
+  ],
+  priceRange: "$$",
+};
 ---
 
 <Layout
@@ -46,6 +82,7 @@ const faqJsonLd = {
   description="Gebäudereinigung in Mainz: WA-Clean betreut Büros, Praxen und Gewerbeobjekte im Raum Mainz von der nahegelegenen Hauptniederlassung Wiesbaden aus. Kostenloses Angebot."
 >
   <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(localBusinessJsonLd)} is:inline />
 
   <Breadcrumbs items={[{ label: "Startseite", href: "/" }, { label: "Gebäudereinigung Mainz", href: "/gebaeudereinigung-mainz/" }]} />
 
@@ -112,6 +149,27 @@ const faqJsonLd = {
     </div>
   </section>
 
+  <!-- So funktioniert's -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Ablauf</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">In 3 Schritten zu Ihrer Reinigung</h2>
+      </div>
+      <div class="reveal-group mt-10 grid gap-8 sm:grid-cols-3">
+        {steps.map((step, i) => (
+          <div class="reveal-item text-center">
+            <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-600 text-lg font-semibold text-white">
+              {i + 1}
+            </span>
+            <h3 class="mt-4 text-base font-semibold text-brand-950">{step.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-brand-700">{step.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <!-- FAQ -->
   <section class="bg-warm-50 py-14 sm:py-16">
     <div class="container-page max-w-2xl">
@@ -128,6 +186,26 @@ const faqJsonLd = {
         ))}
       </div>
       <a href="/faq/" class="btn-secondary mt-8">Alle Fragen &amp; Antworten</a>
+    </div>
+  </section>
+
+  <!-- Weitere Standorte -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Auch interessant</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Unsere Standorte in der Region</h2>
+      </div>
+      <div class="reveal-group mt-8 grid gap-5 sm:grid-cols-2">
+        <a href="/gebaeudereinigung-wiesbaden/" class="reveal-item card block p-6 transition-colors hover:border-accent-600">
+          <h3 class="font-semibold text-brand-950">Gebäudereinigung Wiesbaden</h3>
+          <p class="mt-2 text-sm text-brand-700">Unsere Hauptniederlassung betreut die Landeshauptstadt und alle Stadtteile.</p>
+        </a>
+        <a href="/gebaeudereinigung-rheingau/" class="reveal-item card block p-6 transition-colors hover:border-accent-600">
+          <h3 class="font-semibold text-brand-950">Gebäudereinigung Rheingau</h3>
+          <p class="mt-2 text-sm text-brand-700">Unser zweiter Standort in Oestrich-Winkel betreut den gesamten Rheingau.</p>
+        </a>
+      </div>
     </div>
   </section>
 

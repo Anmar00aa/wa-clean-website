@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import Icon from "../components/Icon.astro";
-import { locations, getWhatsappHref } from "../config/site";
+import { site, locations, partners, getWhatsappHref } from "../config/site";
 
 const whatsappHref = getWhatsappHref("de");
 
@@ -22,6 +22,19 @@ const wichtigsteLeistungen = [
   { title: "Treppenhausreinigung", href: "/leistungen/treppenhausreinigung/", text: "Gepflegte Eingangs- und Treppenbereiche für Hausverwaltungen." },
 ];
 
+const steps = [
+  { title: "Anfrage senden", text: "Teilen Sie uns kurz mit, was in Wiesbaden gereinigt werden soll." },
+  { title: "Besichtigung & Angebot", text: "Bei Bedarf besichtigen wir das Objekt vor Ort und erstellen ein individuelles Angebot." },
+  { title: "Reinigung starten", text: "Nach Ihrer Freigabe planen wir den Einsatz und legen los." },
+];
+
+const referenzNamen = [
+  "United States Army Garrison Wiesbaden",
+  "Hautarztpraxis Dr. Hammer",
+  "Bernd Baumgärtner Hausmeisterservice GmbH",
+];
+const referenzen = partners.filter((p) => referenzNamen.includes(p.name));
+
 const faq = [
   {
     question: "Was kostet eine Gebäudereinigung in Wiesbaden?",
@@ -35,6 +48,14 @@ const faq = [
     question: "Reinigen Sie auch in Mainz-Kastel und Mainz-Kostheim?",
     answer: "Ja. Die AKK-Stadtteile Mainz-Kastel, Mainz-Kostheim und Amöneburg gehören zu Wiesbaden und liegen in unserem regulären Einsatzgebiet.",
   },
+  {
+    question: "Wie schnell bekomme ich einen Termin für ein Angebot?",
+    answer: "In der Regel melden wir uns innerhalb weniger Werktage bei Ihnen. Bei größeren Objekten vereinbaren wir vorab einen Besichtigungstermin, damit das Angebot wirklich zu Ihrem Objekt passt.",
+  },
+  {
+    question: "Reinigen Sie auch für Firmen mit mehreren Standorten in Wiesbaden?",
+    answer: "Ja. Für Unternehmen und Hausverwaltungen mit mehreren Objekten in Wiesbaden koordinieren wir feste Reinigungstage und einen durchgehenden Ansprechpartner für alle Standorte.",
+  },
 ];
 
 const faqJsonLd = {
@@ -46,6 +67,30 @@ const faqJsonLd = {
     acceptedAnswer: { "@type": "Answer", text: f.answer },
   })),
 };
+
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: `${site.legalName} – Hauptniederlassung Wiesbaden`,
+  url: `${site.url}/gebaeudereinigung-wiesbaden/`,
+  telephone: wiesbaden.phoneHref.replace("tel:", ""),
+  email: site.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: wiesbaden.street,
+    postalCode: wiesbaden.zip,
+    addressLocality: wiesbaden.city,
+    addressCountry: "DE",
+  },
+  areaServed: { "@type": "City", name: "Wiesbaden" },
+  openingHoursSpecification: [
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "08:00", closes: "20:00" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Saturday"], opens: "10:00", closes: "18:00" },
+  ],
+  priceRange: "$$",
+};
+
+const mapEmbedSrc = `https://www.google.com/maps?q=${encodeURIComponent(`${wiesbaden.street}, ${wiesbaden.zip} ${wiesbaden.city}`)}&output=embed`;
 ---
 
 <Layout
@@ -53,6 +98,7 @@ const faqJsonLd = {
   description="Professionelle Gebäudereinigung in Wiesbaden und allen Stadtteilen: Büro-, Unterhalts- und Fensterreinigung für Unternehmen, Hausverwaltungen und Privatkunden. Kostenloses Angebot."
 >
   <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(localBusinessJsonLd)} is:inline />
 
   <Breadcrumbs items={[{ label: "Startseite", href: "/" }, { label: "Gebäudereinigung Wiesbaden", href: "/gebaeudereinigung-wiesbaden/" }]} />
 
@@ -69,7 +115,14 @@ const faqJsonLd = {
         </p>
         <p class="mt-4 text-brand-700 leading-relaxed">
           Ob Bürogebäude in der Innenstadt, Wohnanlage in Biebrich oder Praxis in Sonnenberg – wir kennen
-          die Stadt und passen unsere Reinigungskonzepte an Ihr Objekt und Ihren Alltag an.
+          die Stadt und passen unsere Reinigungskonzepte an Ihr Objekt und Ihren Alltag an. Von der
+          regelmäßigen Unterhaltsreinigung über die Büroreinigung bis zur einmaligen Grundreinigung
+          übernehmen wir die Aufgaben, die in Ihrem Betrieb sonst liegen bleiben.
+        </p>
+        <p class="mt-4 text-brand-700 leading-relaxed">
+          Unsere zweite Anlaufstelle im Rheingau und unser Einsatzgebiet bis nach Mainz ergänzen die
+          Arbeit von Wiesbaden aus – bei Bedarf sprechen Sie einfach direkt Ihren Ansprechpartner in
+          Wiesbaden an, {wiesbaden.manager}.
         </p>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <a href="/kontakt/" class="btn-primary">Kostenloses Angebot anfordern</a>
@@ -154,8 +207,70 @@ const faqJsonLd = {
     </div>
   </section>
 
-  <!-- FAQ -->
+  <!-- So funktioniert's -->
   <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Ablauf</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">In 3 Schritten zu Ihrer Reinigung</h2>
+      </div>
+      <div class="reveal-group mt-10 grid gap-8 sm:grid-cols-3">
+        {steps.map((step, i) => (
+          <div class="reveal-item text-center">
+            <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-600 text-lg font-semibold text-white">
+              {i + 1}
+            </span>
+            <h3 class="mt-4 text-base font-semibold text-brand-950">{step.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-brand-700">{step.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {referenzen.length > 0 && (
+    <section class="bg-warm-50 py-14 sm:py-16">
+      <div class="container-page">
+        <div class="reveal mx-auto max-w-2xl text-center">
+          <p class="eyebrow">Referenzen</p>
+          <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Diese Kunden vertrauen uns in Wiesbaden</h2>
+        </div>
+        <div class="reveal-group mt-10 grid grid-cols-2 items-center gap-8 sm:grid-cols-3">
+          {referenzen.map((r) => (
+            <div class="reveal-item flex items-center justify-center p-4">
+              <img src={r.logo} alt={r.name} class="max-h-14 w-full object-contain grayscale transition-all hover:grayscale-0" />
+            </div>
+          ))}
+        </div>
+        <div class="mt-8 text-center">
+          <a href="/referenzen/" class="btn-secondary">Alle Referenzen ansehen</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Karte -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">So finden Sie uns</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Hauptniederlassung Wiesbaden</h2>
+        <p class="mt-4 text-brand-700">{wiesbaden.street}, {wiesbaden.zip} {wiesbaden.city}</p>
+      </div>
+      <div class="reveal mt-8 aspect-[16/9] w-full overflow-hidden rounded-lg ring-1 ring-inset ring-brand-100">
+        <iframe
+          src={mapEmbedSrc}
+          class="h-full w-full border-0"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Karte: WA-Clean Hauptniederlassung Wiesbaden"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-warm-50 py-14 sm:py-16">
     <div class="container-page max-w-2xl">
       <h2 class="reveal text-2xl font-semibold sm:text-3xl">Häufige Fragen zu Wiesbaden</h2>
       <div class="mt-6 space-y-4">
@@ -170,6 +285,26 @@ const faqJsonLd = {
         ))}
       </div>
       <a href="/faq/" class="btn-secondary mt-8">Alle Fragen &amp; Antworten</a>
+    </div>
+  </section>
+
+  <!-- Weitere Standorte -->
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <p class="eyebrow">Auch interessant</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Unsere weiteren Standorte</h2>
+      </div>
+      <div class="reveal-group mt-8 grid gap-5 sm:grid-cols-2">
+        <a href="/gebaeudereinigung-rheingau/" class="reveal-item card block p-6 transition-colors hover:border-accent-600">
+          <h3 class="font-semibold text-brand-950">Gebäudereinigung Rheingau</h3>
+          <p class="mt-2 text-sm text-brand-700">Unser zweiter Standort in Oestrich-Winkel betreut den gesamten Rheingau.</p>
+        </a>
+        <a href="/gebaeudereinigung-mainz/" class="reveal-item card block p-6 transition-colors hover:border-accent-600">
+          <h3 class="font-semibold text-brand-950">Gebäudereinigung Mainz</h3>
+          <p class="mt-2 text-sm text-brand-700">Von Wiesbaden aus sind wir auch für Objekte in Mainz und Umgebung im Einsatz.</p>
+        </a>
+      </div>
     </div>
   </section>
 

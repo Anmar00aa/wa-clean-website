@@ -29,19 +29,25 @@ export const site = {
   taxNumber: "040 248 02145",
   commercialRegister: "Amtsgericht Wiesbaden, HRB 36789",
 
-  // Produktions-URL der Website (für Canonical/OG-Tags & Sitemap)
-  // Aus der E-Mail-Domain abgeleitet – bitte bestätigen bzw. anpassen,
-  // falls die Website unter einer anderen Domain läuft.
-  url: "https://www.wa-clean.de",
+  // Produktions-URL der Website (für Canonical/OG-Tags & Sitemap).
+  // Bewusst OHNE "www" – das ist die kanonische Domain-Variante.
+  url: "https://wa-clean.de",
 
   openingHours: "Mo–Fr 8:00–20:00 Uhr, Sa 10:00–18:00 Uhr, So geschlossen",
 
-  // Zentral konfigurierbarer Link zur öffentlichen Google-Bewertungsseite.
-  // [PLATZHALTER] – bitte durch den echten Google-Bewertungslink ersetzen
-  // (Google Business Profil → "Rezension anfordern" → Link kopieren).
-  // Wird auf /bewertungen/ sowohl bei positivem als auch bei negativem
-  // Feedback verwendet – bewusst OHNE Review-Gating.
-  googleReviewLink: "https://g.page/r/[PLATZHALTER]/review",
+  // Zentral konfigurierbare Links zu den öffentlichen Google-Bewertungsseiten,
+  // je Standort (zwei getrennte Google-Business-Profile). [PLATZHALTER] –
+  // bitte durch die echten Google-Bewertungslinks ersetzen (Google Business
+  // Profil → "Rezension anfordern" → Link kopieren). Werden auf /bewertungen/
+  // sowohl bei positivem als auch bei negativem Feedback verwendet – bewusst
+  // OHNE Review-Gating.
+  googleReviewLinkWiesbaden: "https://g.page/r/[PLATZHALTER]/review",
+  googleReviewLinkRheingau: "https://g.page/r/[PLATZHALTER]/review",
+  // Rückwärtskompatibler Alias für Komponenten ohne Standortbezug (Startseite,
+  // /bewertungen/) – zeigt auf die Hauptniederlassung Wiesbaden.
+  get googleReviewLink() {
+    return this.googleReviewLinkWiesbaden;
+  },
 
   // Zentrale WhatsApp-Geschäftsnummer im internationalen Format ohne "+"
   // und ohne Leerzeichen. Einzige Stelle im Projekt, an der diese Nummer
@@ -145,7 +151,15 @@ export const mainNav = [
   { label: "Startseite", href: "/" },
   { label: "Leistungen", href: "/leistungen/" },
   { label: "Über uns", href: "/ueber-uns/" },
-  { label: "Einsatzgebiet", href: "/einsatzgebiet/" },
+  {
+    label: "Einsatzgebiet",
+    href: "/einsatzgebiet/",
+    children: [
+      { label: "Wiesbaden", href: "/gebaeudereinigung-wiesbaden/" },
+      { label: "Rheingau", href: "/gebaeudereinigung-rheingau/" },
+      { label: "Mainz", href: "/gebaeudereinigung-mainz/" },
+    ],
+  },
   { label: "Referenzen", href: "/referenzen/" },
   { label: "FAQ", href: "/faq/" },
   { label: "Kontakt", href: "/kontakt/" },
