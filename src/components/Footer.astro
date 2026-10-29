@@ -15,7 +15,7 @@ const servicesNav = lang === "en" ? footerNavEn.services : footerNav.leistungen;
 
 const t = lang === "en"
   ? {
-      tagline: `Professional building cleaning for businesses and private clients in Wiesbaden, the ${regions[0]} and the surrounding area.`,
+      tagline: `Professional building cleaning for businesses and private clients in Wiesbaden, the ${regions[0]} and Mainz.`,
       company: "Company",
       services: "Services",
       contact: "Contact",
@@ -25,9 +25,11 @@ const t = lang === "en"
       rights: "All rights reserved.",
       mainOffice: "Head Office",
       rheingauOffice: "Rheingau Location",
+      mainzOffice: "Mainz Location",
+      soon: "coming soon",
     }
   : {
-      tagline: `Professionelle Gebäudereinigung für Unternehmen und Privatkunden in Wiesbaden, ${regions[0]} und Umgebung.`,
+      tagline: `Professionelle Gebäudereinigung für Unternehmen und Privatkunden in Wiesbaden, im ${regions[0]} und in Mainz.`,
       company: "Unternehmen",
       services: "Leistungen",
       contact: "Kontakt",
@@ -37,15 +39,15 @@ const t = lang === "en"
       rights: "Alle Rechte vorbehalten.",
       mainOffice: "Hauptniederlassung",
       rheingauOffice: "Standort Rheingau",
+      mainzOffice: "Standort Mainz",
+      soon: "demnächst",
     };
 ---
 
 <footer class="bg-brand-950 text-brand-50 pb-24 lg:pb-0">
   <div class="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:py-16">
     <div>
-      <div class="inline-flex rounded-xl bg-white p-2">
-        <img src="/logo.png" alt={site.name} class="h-16 w-16" width="64" height="64" />
-      </div>
+      <img src="/logo-horizontal-weiss.png" alt={site.name} class="h-14 w-auto" width="1142" height="400" loading="lazy" />
       <p class="mt-4 text-sm leading-relaxed text-brand-100/80">
         {t.tagline}
       </p>
@@ -92,12 +94,13 @@ const t = lang === "en"
             </div>
           </li>
         ))}
-        {lang === "de" && (
-          <li class="flex items-center gap-2">
-            <Icon name="map-pin" class="h-4 w-4 shrink-0" />
-            <span><a href="/gebaeudereinigung-mainz/" class="hover:text-white">Einsatzgebiet Mainz</a></span>
-          </li>
-        )}
+        <li class="flex items-center gap-2">
+          <Icon name="map-pin" class="h-4 w-4 shrink-0" />
+          <span>
+            <a href={lang === "en" ? "/en/mainz/" : "/gebaeudereinigung-mainz/"} class="hover:text-white">{t.mainzOffice}</a>
+            <span class="ml-1 rounded-full bg-[#95c234]/20 px-2 py-0.5 text-[0.7rem] font-semibold text-[#c8e88a]">{t.soon}</span>
+          </span>
+        </li>
         <li class="flex items-center gap-2">
           <Icon name="mail" class="h-4 w-4 shrink-0" />
           <span>{t.email}: <a href={`mailto:${site.email}`} class="hover:text-white">{site.email}</a></span>

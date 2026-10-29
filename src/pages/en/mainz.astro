@@ -11,13 +11,13 @@ const wiesbaden = locations[0];
 const keyServices = [
   { title: "Office Cleaning", href: "/en/services/bueroreinigung/", text: "For offices, law firms and administrative buildings in Mainz." },
   { title: "Routine Cleaning", href: "/en/services/unterhaltsreinigung/", text: "Regular cleaning for commercial properties and property managers." },
-  { title: "Practice Cleaning", href: "/en/services/bueroreinigung/", text: "Hygienic cleaning for medical practices and healthcare facilities." },
+  { title: "Stairwell Cleaning", href: "/en/services/treppenhausreinigung/", text: "Well-kept stairwells for property managers and apartment buildings in Mainz." },
   { title: "Window & Glass Cleaning", href: "/en/services/fenster-glasreinigung/", text: "Streak-free windows for office and commercial buildings." },
 ];
 
 const faq = [
-  { question: "Is WA-Clean active in Mainz too?", answer: "Yes. Mainz is part of our service area. We serve businesses, property managers and private clients there from our head office in Wiesbaden." },
-  { question: "Do you have your own branch in Mainz?", answer: `No. Our head office is in Wiesbaden (${wiesbaden.street}, ${wiesbaden.zip} ${wiesbaden.city}). Being right next door to Mainz means we can reach properties there with short travel distances and flexible scheduling.` },
+  { question: "Is WA-Clean active in Mainz too?", answer: "Yes. Mainz is already part of our service area. We serve businesses, property managers and private clients there – currently from our head office in Wiesbaden, and soon from our new location in Mainz." },
+  { question: "Do you have your own branch in Mainz?", answer: `Our Mainz location is opening soon. Until then, we serve your properties in Mainz from our head office in Wiesbaden (${wiesbaden.street}, ${wiesbaden.zip} ${wiesbaden.city}) – with short routes and a fixed point of contact.` },
   { question: "Do you charge travel costs for properties in Mainz?", answer: "For recurring contracts within a 30 km radius of our Wiesbaden or Oestrich-Winkel locations, we don't charge additional travel costs – large parts of Mainz fall within this radius. We're happy to clarify the details individually." },
 ];
 
@@ -35,7 +35,7 @@ const faqJsonLd = {
 <Layout
   lang="en"
   title="Building Cleaning Mainz"
-  description="Building cleaning in Mainz: WA-Clean serves offices, practices and commercial properties in the Mainz area from our nearby head office in Wiesbaden. Free quote."
+  description="Building cleaning in Mainz: WA-Clean serves offices, practices and commercial properties in the Mainz area – new Mainz location coming soon. Free quote."
 >
   <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />
 
@@ -44,7 +44,10 @@ const faqJsonLd = {
   <section class="py-14 sm:py-16">
     <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center">
       <div class="reveal">
-        <p class="eyebrow">Service Area: Mainz</p>
+        <p class="flex flex-wrap items-center gap-3">
+          <span class="eyebrow">Service Area: Mainz</span>
+          <span class="soon-badge">New location – coming soon</span>
+        </p>
         <h1 class="mt-3 text-4xl font-semibold sm:text-5xl">Building Cleaning in the Mainz Area</h1>
         <p class="mt-6 text-brand-700 leading-relaxed">
           Mainz is just a few minutes' drive from our head office in Wiesbaden – the close neighbourhood of
@@ -71,11 +74,12 @@ const faqJsonLd = {
   <section class="bg-warm-50 py-14 sm:py-16">
     <div class="container-page">
       <div class="reveal mx-auto max-w-2xl text-center">
-        <p class="eyebrow">Good to Know</p>
-        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">Mainz Is Our Service Area</h2>
+        <p class="eyebrow">Coming Soon to Mainz</p>
+        <h2 class="mt-3 text-2xl font-semibold sm:text-3xl">New Mainz Location – Coming Soon</h2>
         <p class="mt-4 text-brand-700">
-          We serve Mainz from our head office in Wiesbaden – without a branch on site, but with short
-          routes across the Rhine bridges and a fixed point of contact for your property. The area around
+          We are opening our third location in Mainz shortly. Until then, we serve Mainz from our head
+          office in Wiesbaden – with short routes across the Rhine bridges and a fixed point of contact
+          for your property. The area around
           the university and the city centre is also part of our service area.
         </p>
       </div>

@@ -22,7 +22,7 @@ const { title, description, noIndex = false, lang = "de", alternateHref } = Astr
 
 const pageTitle = `${title} | ${site.name}`;
 const canonicalURL = new URL(Astro.url.pathname, site.url);
-const ogImage = new URL("/og-image.svg", site.url);
+const ogImage = new URL("/og-image.jpg", site.url);
 
 const currentPath = Astro.url.pathname;
 const resolvedAlternate =
@@ -86,11 +86,17 @@ const localBusinessJsonLd = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={site.name} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
 
-    <link rel="icon" type="image/png" href="/logo.png" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#1d1d1f" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#17375C" />
 
     <script type="application/ld+json" set:html={JSON.stringify(localBusinessJsonLd)} is:inline />
   </head>

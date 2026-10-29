@@ -40,8 +40,11 @@ const { services } = Astro.props;
     <div class="card border-l-4 border-accent-600 p-6 sm:p-8">
       <p class="text-lg font-semibold text-brand-950">Vielen Dank! Es freut uns sehr, dass Sie zufrieden waren.</p>
       <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        <a href={site.googleReviewLink} target="_blank" rel="noopener noreferrer" class="btn-primary">
-          Bewertung auf Google schreiben
+        <a href={site.googleReviewLinkWiesbaden} target="_blank" rel="noopener noreferrer" class="btn-primary">
+          Google-Bewertung Wiesbaden
+        </a>
+        <a href={site.googleReviewLinkRheingau} target="_blank" rel="noopener noreferrer" class="btn-primary">
+          Google-Bewertung Rheingau
         </a>
         <button type="button" class="text-sm font-medium text-accent-700 underline underline-offset-2 hover:text-accent-600" data-show-feedback>
           Feedback direkt an uns senden
@@ -57,9 +60,14 @@ const { services } = Astro.props;
         Schade, dass Sie nicht vollständig zufrieden waren. Wir möchten verstehen, was passiert ist und eine
         Lösung finden.
       </p>
-      <a href={site.googleReviewLink} target="_blank" rel="noopener noreferrer" class="btn-secondary mt-5 inline-flex">
-        Alternativ Bewertung auf Google schreiben
-      </a>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <a href={site.googleReviewLinkWiesbaden} target="_blank" rel="noopener noreferrer" class="btn-secondary inline-flex">
+          Alternativ: Google-Bewertung Wiesbaden
+        </a>
+        <a href={site.googleReviewLinkRheingau} target="_blank" rel="noopener noreferrer" class="btn-secondary inline-flex">
+          Alternativ: Google-Bewertung Rheingau
+        </a>
+      </div>
     </div>
   </div>
 

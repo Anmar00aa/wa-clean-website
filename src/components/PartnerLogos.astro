@@ -13,7 +13,7 @@ import { partners } from "../config/site";
         <img
           src={partner.logo}
           alt={partner.name}
-          class="h-full w-auto max-w-[9rem] object-contain sm:max-w-[10rem]"
+          class:list={["h-full w-auto max-w-[9rem] object-contain sm:max-w-[10rem]", "rounded" in partner && partner.rounded && "rounded-lg"]}
           loading="lazy"
         />
       </div>

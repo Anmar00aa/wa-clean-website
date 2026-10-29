@@ -1,9 +1,6 @@
 ---
-// "Das sagen unsere Kunden" – technisch/optisch vorbereitet, aber
-// bewusst OHNE erfundene Bewertungen/Sterne/Namen. Sobald echte
-// Google-Bewertungen (z. B. über die Google Places API oder ein
-// Bewertungs-Widget) angebunden werden, ersetzt das die Platzhalter-Karte
-// unten durch echte Einträge.
+// "Das sagen unsere Kunden" – bewusst OHNE erfundene Bewertungen/Namen.
+// Verlinkt direkt auf die Google-Bewertungsformulare beider Standorte.
 import { site } from "../config/site";
 
 interface Props {
@@ -17,15 +14,17 @@ const t = lang === "en"
       eyebrow: "Testimonials",
       heading: "What our customers say",
       text: "Real reviews from our customers on Google.",
-      pending: "Our genuine Google reviews will be displayed here shortly.",
-      cta: "See reviews on Google",
+      pending: "Happy with our work? A short Google review helps other customers – and helps us.",
+      ctaWi: "Review Wiesbaden",
+      ctaRg: "Review Rheingau",
     }
   : {
       eyebrow: "Kundenstimmen",
       heading: "Das sagen unsere Kunden",
       text: "Echte Bewertungen unserer Kundinnen und Kunden auf Google.",
-      pending: "Unsere echten Google-Bewertungen werden hier in Kürze angezeigt.",
-      cta: "Bewertungen auf Google ansehen",
+      pending: "Zufrieden mit uns? Eine kurze Bewertung auf Google hilft anderen Kunden – und uns.",
+      ctaWi: "Bewertung Wiesbaden",
+      ctaRg: "Bewertung Rheingau",
     };
 ---
 
@@ -41,7 +40,7 @@ const t = lang === "en"
 
     <div class="reveal mx-auto mt-10 max-w-xl">
       <div class="card flex flex-col items-center gap-3 p-8 text-center">
-        <div class="flex gap-1 text-brand-100" aria-hidden="true">
+        <div class="flex gap-1 text-amber-400" aria-hidden="true">
           {Array.from({ length: 5 }).map(() => (
             <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
               <path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7-5.4-4.7 7.1-.7L12 2.5Z" />
@@ -51,9 +50,14 @@ const t = lang === "en"
         <p class="text-sm text-brand-600">
           {t.pending}
         </p>
-        <a href={site.googleReviewLink} target="_blank" rel="noopener noreferrer" class="btn-secondary mt-1">
-          {t.cta}
-        </a>
+        <div class="mt-1 flex flex-wrap justify-center gap-3">
+          <a href={site.googleReviewLinkWiesbaden} target="_blank" rel="noopener noreferrer" class="btn-secondary">
+            {t.ctaWi}
+          </a>
+          <a href={site.googleReviewLinkRheingau} target="_blank" rel="noopener noreferrer" class="btn-secondary">
+            {t.ctaRg}
+          </a>
+        </div>
       </div>
     </div>
   </div>

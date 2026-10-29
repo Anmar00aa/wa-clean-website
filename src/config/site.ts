@@ -36,13 +36,11 @@ export const site = {
   openingHours: "Mo–Fr 8:00–20:00 Uhr, Sa 10:00–18:00 Uhr, So geschlossen",
 
   // Zentral konfigurierbare Links zu den öffentlichen Google-Bewertungsseiten,
-  // je Standort (zwei getrennte Google-Business-Profile). [PLATZHALTER] –
-  // bitte durch die echten Google-Bewertungslinks ersetzen (Google Business
-  // Profil → "Rezension anfordern" → Link kopieren). Werden auf /bewertungen/
+  // je Standort (zwei getrennte Google-Business-Profile). Werden auf /bewertungen/
   // sowohl bei positivem als auch bei negativem Feedback verwendet – bewusst
   // OHNE Review-Gating.
-  googleReviewLinkWiesbaden: "https://g.page/r/[PLATZHALTER]/review",
-  googleReviewLinkRheingau: "https://g.page/r/[PLATZHALTER]/review",
+  googleReviewLinkWiesbaden: "https://g.page/r/CXo99jVcN4oREAE/review",
+  googleReviewLinkRheingau: "https://g.page/r/CQIVIN1CZD-QEAE/review",
   // Rückwärtskompatibler Alias für Komponenten ohne Standortbezug (Startseite,
   // /bewertungen/) – zeigt auf die Hauptniederlassung Wiesbaden.
   get googleReviewLink() {
@@ -88,7 +86,7 @@ export function getWhatsappHref(lang: "de" | "en" = "de"): string {
 
 // Grobe Regionsauswahl fürs Quick-Anfrageformular im Hero – bewusst kürzer
 // als die vollständige regions-Liste unten (Startseite/Hero-Kontext).
-export const contactRegions = ["Wiesbaden", "Rheingau", "Keine Präferenz"] as const;
+export const contactRegions = ["Wiesbaden", "Rheingau", "Mainz", "Keine Präferenz"] as const;
 
 // Beide Standorte. Die Hauptniederlassung (Wiesbaden) ist zugleich die
 // rechtlich maßgebliche Anschrift (siehe site.street/zip/city oben).
@@ -135,6 +133,9 @@ export const partners = [
   { name: "Hochschule Geisenheim", logo: "/partners/hs-geisenheim.svg" },
   { name: "Weingut Goldatzel", logo: "/partners/goldatzel.png" },
   { name: "Autohaus Schönleber Schuld", logo: "/partners/autohaus-schoenleber.png" },
+  { name: "Kloster Marienthal", logo: "/partners/kloster-marienthal.png" },
+  { name: "mowa – Padel Geisenheim", logo: "/partners/mowa-padel-geisenheim.jpg", rounded: true },
+  { name: "Campingplatz Hattenheim", logo: "/partners/campingplatz-hattenheim.png" },
 ] as const;
 
 export const regions = [
@@ -237,3 +238,25 @@ export const pageTranslationsDeToEn: Record<string, string> = {
 export const pageTranslationsEnToDe: Record<string, string> = Object.fromEntries(
   Object.entries(pageTranslationsDeToEn).map(([de, en]) => [en, de])
 );
+
+// Geschäftsführung (Über uns + Startseite). Fotos liegen in public/team/.
+export const managers = [
+  {
+    name: "Wael Alsaad",
+    roleDe: "Geschäftsführer · Standort Wiesbaden",
+    roleEn: "Managing Director · Wiesbaden",
+    photo: "/team/wael-alsaad.jpg",
+    width: 800,
+    height: 1200,
+    location: locations[0],
+  },
+  {
+    name: "Anmar Alemarah",
+    roleDe: "Geschäftsführer · Standort Oestrich-Winkel",
+    roleEn: "Managing Director · Oestrich-Winkel",
+    photo: "/team/anmar-alemarah.jpg",
+    width: 800,
+    height: 1096,
+    location: locations[1],
+  },
+] as const;

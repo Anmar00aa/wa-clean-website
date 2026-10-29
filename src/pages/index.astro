@@ -11,7 +11,7 @@ import VorherNachherShowcase from "../components/VorherNachherShowcase.astro";
 import GoogleReviewsShowcase from "../components/GoogleReviewsShowcase.astro";
 import QuoteWizard from "../components/QuoteWizard.astro";
 import Icon from "../components/Icon.astro";
-import { site, regions } from "../config/site";
+import { site, regions, managers } from "../config/site";
 
 const allServices = (await getCollection("leistungen")).sort(
   (a, b) => a.data.reihenfolge - b.data.reihenfolge
@@ -49,7 +49,7 @@ const trustPoints = [
 
 const stats = [
   { value: "30 km", label: "Keine Anfahrtskosten bei Daueraufträgen" },
-  { value: "2", label: "Standorte – Wiesbaden & Oestrich-Winkel" },
+  { value: "2+1", label: "Standorte – Wiesbaden & Oestrich-Winkel, Mainz demnächst" },
   { value: "100%", label: "Persönlicher Service & direkte Ansprechpartner" },
 ];
 
@@ -285,12 +285,16 @@ const steps = [
   <!-- Über uns Teaser -->
   <section class="bg-warm-100 py-16 sm:py-20 lg:py-24">
     <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-center">
-      <div class="reveal order-2 aspect-[4/3] w-full overflow-hidden rounded-lg lg:order-1">
-        <img
-          src="/work/action-gardine-fenster.jpg"
-          alt="WA-Clean Mitarbeiter bei der Fensterreinigung"
-          class="h-full w-full object-cover"
-        />
+      <div class="reveal order-2 grid grid-cols-2 gap-4 lg:order-1">
+        {managers.map((m) => (
+          <figure class="m-0 overflow-hidden rounded-lg bg-[#0b0b0b]">
+            <img src={m.photo} alt={`${m.name}, ${m.roleDe}`} width={m.width} height={m.height} loading="lazy" class="aspect-[4/5] h-auto w-full object-cover object-top" />
+            <figcaption class="bg-white px-3 py-2.5 ring-1 ring-inset ring-brand-100">
+              <span class="block text-sm font-semibold text-brand-950">{m.name}</span>
+              <span class="block text-xs text-brand-700">{m.roleDe}</span>
+            </figcaption>
+          </figure>
+        ))}
       </div>
       <div class="reveal order-1 lg:order-2">
         <p class="eyebrow">Über uns</p>

@@ -15,7 +15,7 @@ const uid = Math.random().toString(36).slice(2, 8);
         style={`opacity:${i === 0 ? 1 : 0};`}
         aria-hidden={i === 0 ? "false" : "true"}
       >
-        <img src={partner.logo} alt={partner.name} class="max-h-32 max-w-full object-contain sm:max-h-36" loading="lazy" />
+        <img src={partner.logo} alt={partner.name} class:list={["max-h-32 max-w-full object-contain sm:max-h-36", "rounded" in partner && partner.rounded && "rounded-xl"]} loading="lazy" />
       </div>
     ))}
   </div>

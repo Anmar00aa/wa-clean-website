@@ -30,6 +30,7 @@ const caption = lang === "en" ? "Our service area: Wiesbaden, Rheingau & Mainz" 
     lat: number;
     lng: number;
     primary?: boolean;
+    soon?: boolean;
     subtitle?: string;
   }
 
@@ -40,7 +41,7 @@ const caption = lang === "en" ? "Our service area: Wiesbaden, Rheingau & Mainz" 
     return [
       { name: "Wiesbaden", lat: 50.0782, lng: 8.2398, primary: true, subtitle: isEn ? "Head Office" : "Hauptniederlassung" },
       { name: "Oestrich-Winkel", lat: 50.0308, lng: 7.9724, primary: true, subtitle: isEn ? "Rheingau Location" : "Standort Rheingau" },
-      { name: "Mainz", lat: 49.9929, lng: 8.2473 },
+      { name: "Mainz", lat: 49.9929, lng: 8.2473, soon: true, subtitle: isEn ? "New location – coming soon" : "Neuer Standort – demnächst" },
       { name: "Eltville am Rhein", lat: 50.0273, lng: 8.1197 },
       { name: "Geisenheim", lat: 49.9856, lng: 7.9614 },
       { name: "Rüdesheim am Rhein", lat: 49.9786, lng: 7.9098 },
@@ -49,7 +50,7 @@ const caption = lang === "en" ? "Our service area: Wiesbaden, Rheingau & Mainz" 
 
   function createIcon(primary: boolean) {
     const size = primary ? 32 : 20;
-    const color = primary ? "#0071e3" : "#6e6e73";
+    const color = primary ? "#17375c" : "#6e6e73";
     const border = primary ? 3 : 2;
     return L.divIcon({
       className: "",
@@ -65,6 +66,18 @@ const caption = lang === "en" ? "Our service area: Wiesbaden, Rheingau & Mainz" 
       iconSize: [size, size],
       iconAnchor: [size / 2, size],
       popupAnchor: [0, -size],
+    });
+  }
+
+  // Neuer Standort (Mainz): grüner Punkt mit pulsierendem Ring.
+  function createSoonIcon() {
+    const size = 22;
+    return L.divIcon({
+      className: "",
+      html: `<span class="map-soon"><span class="map-soon__ring"></span><span class="map-soon__dot"></span></span>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+      popupAnchor: [0, -size / 2],
     });
   }
 
@@ -93,7 +106,17 @@ const caption = lang === "en" ? "Our service area: Wiesbaden, Rheingau & Mainz" 
     }).addTo(map);
 
     const markers = locations.map((loc) => {
-      const marker = L.marker([loc.lat, loc.lng], { icon: createIcon(!!loc.primary) }).addTo(map);
+      const marker = L.marker([loc.lat, loc.lng], {
+        icon: loc.soon ? createSoonIcon() : createIcon(!!loc.primary),
+      }).addTo(map);
+      if (loc.soon) {
+        marker.bindTooltip(isEn ? "Mainz · coming soon" : "Mainz · demnächst", {
+          permanent: true,
+          direction: "right",
+          offset: [12, 0],
+          className: "map-soon-label",
+        });
+      }
       marker.bindPopup(
         `<strong>${loc.name}</strong>${loc.subtitle ? `<br><span style="color:#6e6e73">${loc.subtitle}</span>` : ""}`
       );
@@ -123,6 +146,51 @@ const caption = lang === "en" ? "Our service area: Wiesbaden, Rheingau & Mainz" 
   :global(.leaflet-popup-content-wrapper) {
     border-radius: 10px;
     font-family: var(--font-sans);
+  }
+  :global(.map-soon) {
+    position: relative;
+    display: block;
+    width: 22px;
+    height: 22px;
+  }
+  :global(.map-soon__dot) {
+    position: absolute;
+    inset: 5px;
+    border-radius: 9999px;
+    background: #95c234;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(29, 29, 31, 0.35);
+  }
+  :global(.map-soon__ring) {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: rgba(149, 194, 52, 0.55);
+    animation: map-soon-pulse 1.8s ease-out infinite;
+  }
+  @keyframes map-soon-pulse {
+    0% { transform: scale(0.6); opacity: 0.9; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+  :global(.map-soon-label) {
+    border: 0;
+    border-radius: 9999px;
+    background: #95c234;
+    color: #17375c;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    box-shadow: 0 2px 6px rgba(29, 29, 31, 0.2);
+  }
+  :global(.map-soon-label::before) {
+    display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.map-soon__ring) {
+      animation: none;
+      opacity: 0.35;
+    }
   }
   :global(.leaflet-popup-content) {
     margin: 10px 14px;
