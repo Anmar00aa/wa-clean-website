@@ -3,6 +3,7 @@
 export type IconName =
   | "sparkle"
   | "office"
+  | "medical"
   | "window"
   | "deep-clean"
   | "construction"
@@ -52,6 +53,12 @@ const { name, class: className = "", id } = Astro.props;
 >
   {name === "sparkle" && (
     <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.5 6.5l2 2M15.5 15.5l2 2M6.5 17.5l2-2M15.5 8.5l2-2" />
+  )}
+  {name === "medical" && (
+    <>
+      <rect x="4" y="4" width="16" height="16" rx="3" />
+      <path d="M12 8v8M8 12h8" />
+    </>
   )}
   {name === "office" && (
     <>

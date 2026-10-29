@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import Icon from "../components/Icon.astro";
+import ConsentMap from "../components/ConsentMap.astro";
 import { site, locations, partners, getWhatsappHref } from "../config/site";
 
 const whatsappHref = getWhatsappHref("de");
@@ -258,13 +259,7 @@ const mapEmbedSrc = `https://www.google.com/maps?q=${encodeURIComponent(`${wiesb
         <p class="mt-4 text-brand-700">{wiesbaden.street}, {wiesbaden.zip} {wiesbaden.city}</p>
       </div>
       <div class="reveal mt-8 aspect-[16/9] w-full overflow-hidden rounded-lg ring-1 ring-inset ring-brand-100">
-        <iframe
-          src={mapEmbedSrc}
-          class="h-full w-full border-0"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title="Karte: WA-Clean Hauptniederlassung Wiesbaden"
-        ></iframe>
+        <ConsentMap src={mapEmbedSrc} title="Karte: WA-Clean Hauptniederlassung Wiesbaden" address={`${wiesbaden.street}, ${wiesbaden.zip} ${wiesbaden.city}`} />
       </div>
     </div>
   </section>

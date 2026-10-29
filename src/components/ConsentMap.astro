@@ -1,0 +1,52 @@
+---
+// Google-Maps-Karte erst nach Klick laden (Zwei-Klick-Lösung, DSGVO):
+// Vor dem Klick wird keine Verbindung zu Google aufgebaut.
+import Icon from "./Icon.astro";
+
+interface Props {
+  src: string;
+  title: string;
+  address: string;
+  lang?: "de" | "en";
+}
+
+const { src, title, address, lang = "de" } = Astro.props;
+const isEn = lang === "en";
+const routeHref = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+---
+
+<div class="consent-map relative h-full w-full bg-brand-50" data-consent-map data-src={src} data-title={title}>
+  <div class="flex h-full w-full flex-col items-center justify-center gap-4 p-6 text-center" data-consent-placeholder>
+    <Icon name="map-pin" class="h-8 w-8 text-accent-600" />
+    <p class="max-w-md text-sm text-brand-700">
+      {isEn
+        ? "To show the map, Google Maps is loaded. Your IP address will be transmitted to Google."
+        : "Zum Anzeigen der Karte wird Google Maps geladen. Dabei wird Ihre IP-Adresse an Google übermittelt."}
+      {" "}
+      <a href="/datenschutz/" class="underline underline-offset-2 hover:text-accent-600">{isEn ? "Privacy policy" : "Datenschutz"}</a>
+    </p>
+    <div class="flex flex-wrap justify-center gap-3">
+      <button type="button" class="btn-primary" data-consent-load>
+        {isEn ? "Load map" : "Karte laden"}
+      </button>
+      <a href={routeHref} target="_blank" rel="noopener noreferrer" class="btn-secondary">
+        {isEn ? "Open route in Google Maps" : "Route in Google Maps öffnen"}
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-consent-map]").forEach((box) => {
+    const btn = box.querySelector<HTMLButtonElement>("[data-consent-load]");
+    btn?.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.src = box.dataset.src ?? "";
+      iframe.title = box.dataset.title ?? "";
+      iframe.className = "h-full w-full border-0";
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "no-referrer-when-downgrade";
+      box.replaceChildren(iframe);
+    });
+  });
+</script>
